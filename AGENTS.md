@@ -17,3 +17,4 @@ All components and code must be easy to debug on development environment
 
 ## Development
 - Check `.cursor/tmp/hooks.log` for hooks log information everytime modifying the codebase
+- Update USER-CHOICE.md if user setup new configurations
