@@ -10,7 +10,7 @@
 ## 2. Analyze Deeply on How to Implement the Auth System
 - Assume the docs changes rapidly, thus need to re-check
 - Project directory & current setup
-- Key file to edit
+- Key files to edit
 
 ## 3. Start creating blueprint using plan mode
 - Show how authentication flow will works using mermaid diagram
