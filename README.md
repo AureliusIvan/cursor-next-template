@@ -1,1 +1,1 @@
-# Cursor Next Template
+# Cursor Next Template (Learning Platform)

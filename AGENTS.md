@@ -14,3 +14,6 @@ All components and code must be easy to debug on development environment
 - Strategic console.log/console.error for key flows
 - Single responsibility per function/component
 - Clear separation of concerns
+
+## Development
+- Check ./cursor/tmp/hooks.log for hooks log information everytime modifying the codebase
