@@ -46,12 +46,3 @@ export function getDatabaseId() {
   }
   return process.env.NOTION_DATABASE_ID;
 }
-
-/**
- * Create a Notion client with a user's OAuth token
- */
-export function createNotionClientWithToken(accessToken: string) {
-  return new Client({
-    auth: accessToken,
-  });
-}
