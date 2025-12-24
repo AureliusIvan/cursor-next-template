@@ -16,10 +16,11 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
 const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    adapter,
-  });
+  globalForPrisma.prisma && "contact" in globalForPrisma.prisma
+    ? globalForPrisma.prisma
+    : new PrismaClient({
+        adapter,
+      });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

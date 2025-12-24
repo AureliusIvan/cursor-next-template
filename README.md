@@ -1,1 +1,3 @@
-# Cursor Next Template (Learning Platform)
+# Cursor Next Template (Personal CRM Platform)
+
+# Features

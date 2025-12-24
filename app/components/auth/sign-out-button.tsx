@@ -15,7 +15,7 @@ export function SignOutButton() {
           },
         });
       }}
-      className="flex h-10 items-center justify-center rounded-full border border-black/8 bg-white px-5 text-sm font-medium text-black transition-colors hover:bg-black/4 dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:hover:bg-white/[.05]"
+      className="flex h-10 items-center justify-center rounded-full border border-black/8 bg-white px-5 text-sm font-medium text-black transition-colors hover:bg-black/4 dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:hover:bg-white/5"
     >
       Sign Out
     </button>

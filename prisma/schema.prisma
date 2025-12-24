@@ -13,17 +13,23 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  OWNER
+  ASSISTANT
+}
+
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  name         String?
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String?
   emailVerified Boolean   @default(false)
-  image        String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  posts        Post[]
-  accounts     Account[]
-  sessions     Session[]
+  image         String?
+  role          Role      @default(OWNER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  posts         Post[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Post {
@@ -50,20 +56,20 @@ model Session {
 }
 
 model Account {
-  id                   Int       @id @default(autoincrement())
-  userId               Int
-  accountId            String
-  providerId           String
-  accessToken          String?
-  refreshToken         String?
-  accessTokenExpiresAt DateTime?
+  id                    Int       @id @default(autoincrement())
+  userId                Int
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  scope                String?
-  idToken              String?
-  password             String?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, accountId])
 }
@@ -77,4 +83,30 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, value])
+}
+
+model Contact {
+  id           Int       @id @default(autoincrement())
+  notionId     String?   @unique
+  name         String
+  email        String?
+  phone        String?
+  company      String?
+  role         String?
+  metadata     Json?     // Stores flexible data from Notion
+  lastSyncedAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([email])
+  @@index([name])
+}
+
+model SyncState {
+  id           Int      @id @default(autoincrement())
+  resourceType String   @unique // e.g. "contacts"
+  lastSyncTime DateTime
+  cursor       String?  // Notion pagination cursor or sync token
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
