@@ -16,24 +16,6 @@ export async function GET() {
   };
 
   const cleanup = () => {
-    // #region agent log
-    fetch("http://127.0.0.1:7246/ingest/9f64d57e-22ca-4137-8038-752f0ed1afb7", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        location: "app/api/crm/contacts/stream/route.ts:cleanup",
-        message: "Cleanup called",
-        data: {
-          isClosed: state.isClosed,
-          hasInterval: !!state.keepAliveInterval,
-          hasController: !!state.controllerRef,
-        },
-        timestamp: Date.now(),
-        sessionId: "debug-session",
-      }),
-    }).catch(() => {});
-    // #endregion
-
     if (state.isClosed) return; // Prevent double cleanup
 
     // Null out controller FIRST to prevent any send operations
@@ -69,27 +51,6 @@ export async function GET() {
 
         // Wrap entire operation in try-catch to catch any errors
         try {
-          // #region agent log
-          fetch(
-            "http://127.0.0.1:7246/ingest/9f64d57e-22ca-4137-8038-752f0ed1afb7",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "app/api/crm/contacts/stream/route.ts:send",
-                message: "Attempting to send",
-                data: {
-                  source,
-                  isClosed: state.isClosed,
-                  hasController: !!state.controllerRef,
-                },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-              }),
-            },
-          ).catch(() => {});
-          // #endregion
-
           // Store controller reference locally from state object
           const currentController = state.controllerRef;
           if (!currentController) {
@@ -104,30 +65,6 @@ export async function GET() {
             throw enqueueError;
           }
         } catch (error: unknown) {
-          // #region agent log
-          const errorMsg =
-            error instanceof Error ? error.message : String(error);
-          fetch(
-            "http://127.0.0.1:7246/ingest/9f64d57e-22ca-4137-8038-752f0ed1afb7",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "app/api/crm/contacts/stream/route.ts:send",
-                message: "Error in send function",
-                data: {
-                  source,
-                  isClosed: state.isClosed,
-                  hasController: !!state.controllerRef,
-                  error: errorMsg,
-                  errorType: typeof error,
-                },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-              }),
-            },
-          ).catch(() => {});
-          // #endregion
           // Silently return - don't call cleanup() to avoid recursion
           return;
         }
@@ -168,25 +105,6 @@ export async function GET() {
       }, 30000);
     },
     cancel() {
-      // #region agent log
-      fetch(
-        "http://127.0.0.1:7246/ingest/9f64d57e-22ca-4137-8038-752f0ed1afb7",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            location: "app/api/crm/contacts/stream/route.ts:cancel",
-            message: "Stream cancelled",
-            data: {
-              isClosed: state.isClosed,
-              hasInterval: !!state.keepAliveInterval,
-            },
-            timestamp: Date.now(),
-            sessionId: "debug-session",
-          }),
-        },
-      ).catch(() => {});
-      // #endregion
       // Cleanup when stream is cancelled (client disconnect)
       cleanup();
     },
