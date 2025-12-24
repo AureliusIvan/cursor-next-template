@@ -3,6 +3,17 @@
 # lint.sh - Hook script that runs lint:fix on files edited by Cursor agent
 # This script is called by Cursor's afterFileEdit hook
 
+# Set up logging
+LOG_DIR=".cursor/tmp"
+LOG_FILE="$LOG_DIR/hooks.log"
+mkdir -p "$LOG_DIR"
+
+# Log function that writes to both stderr and log file
+log() {
+  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[$timestamp] $*" | tee -a "$LOG_FILE" >&2
+}
+
 # Read JSON input from stdin
 json_input=$(cat)
 
@@ -31,8 +42,19 @@ else
   relative_path="$file_path"
 fi
 
+# Skip files that biome doesn't process (shell scripts, etc.)
+# Biome processes: js, jsx, ts, tsx, json, jsonc, css, and other supported formats
+case "$relative_path" in
+  *.sh|*.bash|*.zsh|*.fish)
+    # Skip shell scripts
+    log "Skipping shell script: $relative_path"
+    exit 0
+    ;;
+esac
+
 # Run biome check --write on the specific file
-bunx biome check --write "$relative_path" 2>&1 > /dev/null
+log "Running biome on: $relative_path"
+bunx biome check --write "$relative_path" 2>&1 | tee -a "$LOG_FILE" >&2 || true
 
 # Exit successfully (don't block agent operations even if linting has warnings)
 exit 0
