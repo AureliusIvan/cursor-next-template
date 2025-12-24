@@ -4,7 +4,7 @@
 - Always use `bun`; do NOT use `pnpm`,`npm`,`yarn`
 
 ## Auto-linting
-Automatic linting runs via Cursor hooks after each file edit. The `.cursor/hooks.json` configuration triggers `bun run lint:fix` automatically, so manual linting is not required.
+Automatic linting runs via Cursor hooks after each file edit. The `.cursor/hooks.json` configuration triggers `bunx biome check --write` on edited files automatically (equivalent to `bun run lint:fix` but runs on individual files), so manual linting is not required.
 
 ## Debuggable
 All components and code must be easy to debug on development environment
@@ -16,4 +16,4 @@ All components and code must be easy to debug on development environment
 - Clear separation of concerns
 
 ## Development
-- Check ./cursor/tmp/hooks.log for hooks log information everytime modifying the codebase
+- Check `.cursor/tmp/hooks.log` for hooks log information everytime modifying the codebase
