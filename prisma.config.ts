@@ -9,9 +9,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
-  },
-  seed: {
-    script: "bun prisma/seed.ts",
+    url: process.env.DATABASE_URL,
   },
 });

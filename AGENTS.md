@@ -3,6 +3,9 @@
 ## IMPORTANT
 - Always use `bun`; do NOT use `pnpm`,`npm`,`yarn`
 
+## Naming Conventions
+- Always use kebab-case for component file naming
+
 ## Auto-linting
 Automatic linting runs via Cursor hooks after each file edit. The `.cursor/hooks.json` configuration triggers `bunx biome check --write` on edited files automatically (equivalent to `bun run lint:fix` but runs on individual files), so manual linting is not required.
 
