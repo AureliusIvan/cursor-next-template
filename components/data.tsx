@@ -1,6 +1,7 @@
 import {
   Bookmark,
   BookOpen,
+  Briefcase,
   Brush,
   Code,
   CuboidIcon,
@@ -12,7 +13,7 @@ import {
   LayoutGrid,
   Users,
   Video,
-} from "lucide-react"
+} from "lucide-react";
 
 import type {
   App,
@@ -21,7 +22,7 @@ import type {
   RecentFile,
   SidebarItem,
   Tutorial,
-} from "./types"
+} from "./types";
 
 export const apps: App[] = [
   {
@@ -78,7 +79,7 @@ export const apps: App[] = [
     new: true,
     progress: 60,
   },
-]
+];
 
 export const recentFiles: RecentFile[] = [
   {
@@ -108,7 +109,7 @@ export const recentFiles: RecentFile[] = [
     size: "1.2 GB",
     collaborators: 0,
   },
-]
+];
 
 export const projects: Project[] = [
   {
@@ -135,7 +136,7 @@ export const projects: Project[] = [
     members: 3,
     files: 18,
   },
-]
+];
 
 export const tutorials: Tutorial[] = [
   {
@@ -156,7 +157,7 @@ export const tutorials: Tutorial[] = [
     category: "Design",
     views: "56K",
   },
-]
+];
 
 export const communityPosts: CommunityPost[] = [
   {
@@ -175,7 +176,7 @@ export const communityPosts: CommunityPost[] = [
     image: "/placeholder.svg?height=300&width=400",
     time: "1 week ago",
   },
-]
+];
 
 export const sidebarItems: SidebarItem[] = [
   {
@@ -244,4 +245,9 @@ export const sidebarItems: SidebarItem[] = [
       { title: "Templates", url: "#" },
     ],
   },
-]
+  {
+    title: "CRM",
+    icon: <Briefcase className="h-4 w-4" />,
+    items: [{ title: "Contacts", url: "/dashboard/crm/contacts" }],
+  },
+];
