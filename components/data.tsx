@@ -183,6 +183,7 @@ export const sidebarItems: SidebarItem[] = [
     title: "Home",
     icon: <Home className="h-4 w-4" />,
     isActive: true,
+    url: "/dashboard",
   },
   {
     title: "Apps",

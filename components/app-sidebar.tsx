@@ -1,21 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react" 
-import { ChevronDown, Search, Settings } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { ChevronDown, Search, Settings } from "lucide-react";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
 import {
   Sidebar,
   SidebarContent,
@@ -29,29 +23,30 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
-import { sidebarItems } from "./data"
+import { sidebarItems } from "./data";
 
 export function AppSidebar() {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
-    {}
-  )
+    {},
+  );
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => ({
       ...prev,
       [title]: !prev[title],
-    }))
-  }
+    }));
+  };
 
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-3 px-2 py-2">
-          <div className="flex aspect-square size-6 items-center justify-center">
+          {/* <div className="flex aspect-square size-6 items-center justify-center">
             Logo
-          </div>
+          </div> */}
           <div>
             <h2 className="font-semibold">Dalim</h2>
             <p className="text-muted-foreground text-xs">UI Blocks</p>
@@ -85,7 +80,7 @@ export function AppSidebar() {
                         <SidebarMenuButton
                           className={cn(
                             "w-full justify-between rounded-2xl",
-                            item.isActive && "bg-primary/10 text-primary"
+                            item.isActive && "bg-primary/10 text-primary",
                           )}
                         >
                           <div className="flex items-center gap-3">
@@ -104,7 +99,7 @@ export function AppSidebar() {
                             <ChevronDown
                               className={cn(
                                 "h-4 w-4 transition-transform",
-                                expandedItems[item.title] ? "rotate-180" : ""
+                                expandedItems[item.title] ? "rotate-180" : "",
                               )}
                             />
                           </div>
@@ -144,7 +139,10 @@ export function AppSidebar() {
                       isActive={item.isActive}
                       className="rounded-2xl"
                     >
-                      <a href="#" className="flex items-center justify-between">
+                      <a
+                        href={item.url || "#"}
+                        className="flex items-center justify-between"
+                      >
                         <div className="flex items-center gap-3">
                           {item.icon}
                           <span>{item.title}</span>
@@ -195,5 +193,5 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
