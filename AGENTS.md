@@ -99,7 +99,9 @@ import { ErrorBoundary } from "@/app/components/debug/error-boundary";
 - All debug utilities automatically disable in production builds
 - Use `isDev()` checks for development-only features
 
-## Development
+## DEVELOPMENT
+- Use `list_mcp_resources` tool to list down available tools first
 - Check `.cursor/tmp/hooks.log` for hooks log information everytime modifying the codebase
+- Check `.cursor/tmp/runner.log` for runner `bun dev` log information related to server-side
 - Update USER-CHOICE.md if user setup new configurations (create one if NOT EXIST; refer to USER-CHOICE-TEMPLATE.md)
 - for AI development, view the logs on .devtools/generations.json

@@ -7,7 +7,7 @@
     "bun": ">=1.0.0"
   },
   "scripts": {
-    "dev": "next dev --inspect --turbopack",
+    "dev": "FORCE_COLOR=1 next dev --inspect --turbopack | tee .cursor/tmp/runner.log",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
