@@ -3,8 +3,17 @@ import { devToolsMiddleware } from "@ai-sdk/devtools";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
 import Firecrawl from "@mendable/firecrawl-js";
-import { convertToModelMessages, streamText, wrapLanguageModel } from "ai";
-import { appendFileSync } from "fs";
+import {
+  convertToModelMessages,
+  stepCountIs,
+  streamText,
+  tool,
+  wrapLanguageModel,
+} from "ai";
+import { z } from "zod";
+
+import { getDatabaseId, getNotionClient } from "@/lib/notion";
+import prisma from "@/lib/prisma";
 
 const provider = process.env.AI_PROVIDER || "openai";
 
@@ -24,7 +33,7 @@ function getModel() {
       if (!apiKey) {
         throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is not set");
       }
-      return google("gemini-2.5-flash");
+      return google("gemini-3-flash-preview");
     }
     case "openai":
     default: {
@@ -148,10 +157,365 @@ function detectErrorType(error: unknown): ErrorInfo {
   };
 }
 
+type ChatMode = "fast" | "agentic";
+
+const AGENTIC_SYSTEM_PROMPT = `You are an advanced AI assistant operating in Agentic mode with access to a CRM database. In this mode, you should:
+
+1. **Think step-by-step**: Break down complex problems into smaller, manageable steps.
+2. **Reason explicitly**: Show your reasoning process before providing answers.
+3. **Be thorough**: Consider multiple perspectives and potential edge cases.
+4. **Plan before acting**: Outline your approach before executing.
+5. **Reflect on results**: Verify your conclusions and consider if there are better alternatives.
+6. **Use available tools**: When the user asks about contacts, companies, or CRM data, use the available tools to query the database.
+
+**Available Tools:**
+- \`searchContacts\`: Search for contacts by name, email, company, or role
+- \`getContact\`: Get detailed information about a specific contact by ID
+- \`listContacts\`: List all contacts with optional pagination
+- \`queryNotionDatabase\`: Query the Notion database directly for advanced searches
+
+When answering questions about contacts or CRM data:
+1. First use the appropriate tool to fetch the data
+2. Present the results in a clear, formatted way
+3. Offer relevant follow-up actions
+
+When answering general questions, structure your response as:
+- **Understanding**: Restate what you understand about the request
+- **Approach**: Outline your planned approach
+- **Execution**: Work through the problem step by step
+- **Result**: Provide the final answer or recommendation
+- **Verification**: Briefly verify the result makes sense`;
+
+// Define Notion/CRM tools for Agentic mode
+const agenticTools = {
+  searchContacts: tool({
+    description:
+      "Search for contacts in the CRM database by name, email, company, or role. Returns matching contacts.",
+    inputSchema: z.object({
+      query: z
+        .string()
+        .describe("Search term to match against name, email, company, or role"),
+      limit: z
+        .number()
+        .optional()
+        .default(10)
+        .describe("Maximum number of results to return"),
+    }),
+    execute: async ({ query, limit }: { query: string; limit: number }) => {
+      try {
+        const contacts = await prisma.contact.findMany({
+          where: {
+            OR: [
+              { name: { contains: query, mode: "insensitive" } },
+              { email: { contains: query, mode: "insensitive" } },
+              { company: { contains: query, mode: "insensitive" } },
+              { role: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          take: limit,
+          orderBy: { updatedAt: "desc" },
+        });
+        return {
+          success: true,
+          count: contacts.length,
+          contacts: contacts.map((c) => ({
+            id: c.id,
+            name: c.name,
+            email: c.email,
+            phone: c.phone,
+            company: c.company,
+            role: c.role,
+            notionId: c.notionId,
+          })),
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to search contacts",
+        };
+      }
+    },
+  }),
+
+  getContact: tool({
+    description:
+      "Get detailed information about a specific contact by their ID",
+    inputSchema: z.object({
+      id: z.number().describe("The contact ID to retrieve"),
+    }),
+    execute: async ({ id }: { id: number }) => {
+      try {
+        const contact = await prisma.contact.findUnique({
+          where: { id },
+        });
+        if (!contact) {
+          return { success: false, error: "Contact not found" };
+        }
+        return {
+          success: true,
+          contact: {
+            id: contact.id,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            company: contact.company,
+            role: contact.role,
+            notionId: contact.notionId,
+            metadata: contact.metadata,
+            createdAt: contact.createdAt,
+            updatedAt: contact.updatedAt,
+            lastSyncedAt: contact.lastSyncedAt,
+          },
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : "Failed to get contact",
+        };
+      }
+    },
+  }),
+
+  listContacts: tool({
+    description:
+      "List all contacts in the CRM database with optional pagination",
+    inputSchema: z.object({
+      limit: z
+        .number()
+        .optional()
+        .default(20)
+        .describe("Maximum number of contacts to return"),
+      offset: z
+        .number()
+        .optional()
+        .default(0)
+        .describe("Number of contacts to skip for pagination"),
+    }),
+    execute: async ({ limit, offset }: { limit: number; offset: number }) => {
+      try {
+        const [contacts, total] = await Promise.all([
+          prisma.contact.findMany({
+            take: limit,
+            skip: offset,
+            orderBy: { name: "asc" },
+          }),
+          prisma.contact.count(),
+        ]);
+        return {
+          success: true,
+          total,
+          count: contacts.length,
+          offset,
+          contacts: contacts.map((c) => ({
+            id: c.id,
+            name: c.name,
+            email: c.email,
+            company: c.company,
+            role: c.role,
+          })),
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : "Failed to list contacts",
+        };
+      }
+    },
+  }),
+
+  queryNotionDatabase: tool({
+    description:
+      "Query the Notion database directly for advanced searches. Use this when you need to search by specific Notion properties or need data not synced to the local database.",
+    inputSchema: z.object({
+      filter: z
+        .object({
+          property: z
+            .string()
+            .describe(
+              "The Notion property name to filter by (e.g., 'Name', 'Email', 'Company')",
+            ),
+          type: z
+            .enum(["title", "rich_text", "email", "phone_number"])
+            .describe("The Notion property type"),
+          value: z.string().describe("The value to search for"),
+        })
+        .optional()
+        .describe("Optional filter for the query"),
+      pageSize: z
+        .number()
+        .optional()
+        .default(10)
+        .describe("Number of results per page"),
+    }),
+    execute: async ({
+      filter,
+      pageSize,
+    }: {
+      filter?: {
+        property: string;
+        type: "title" | "rich_text" | "email" | "phone_number";
+        value: string;
+      };
+      pageSize: number;
+    }) => {
+      try {
+        const notion = getNotionClient();
+        const databaseId = getDatabaseId();
+
+        // First retrieve the database to get data source ID (required for Notion SDK 5.6.0+)
+        const database = await notion.databases.retrieve({
+          database_id: databaseId,
+        });
+        const dataSourceId = (database as any).data_sources?.[0]?.id;
+
+        if (!dataSourceId) {
+          return {
+            success: false,
+            error: "Could not find data source ID for the database",
+          };
+        }
+
+        // Build filter if provided
+        let queryFilter: any;
+        if (filter) {
+          const { property, type, value } = filter;
+          queryFilter = {
+            property,
+            [type]:
+              type === "title" || type === "rich_text"
+                ? { contains: value }
+                : { equals: value },
+          };
+        }
+
+        const response = await notion.dataSources.query({
+          data_source_id: dataSourceId,
+          page_size: pageSize,
+          filter: queryFilter,
+        });
+
+        const results = response.results.map((page: any) => {
+          const props = page.properties || {};
+          return {
+            id: page.id,
+            name:
+              props.Name?.title?.[0]?.plain_text ||
+              props.Title?.title?.[0]?.plain_text ||
+              "Untitled",
+            email: props.Email?.email || null,
+            phone: props.Phone?.phone_number || null,
+            company: props.Company?.rich_text?.[0]?.plain_text || null,
+            role: props.Role?.rich_text?.[0]?.plain_text || null,
+            url: page.url,
+            lastEdited: page.last_edited_time,
+          };
+        });
+
+        return {
+          success: true,
+          count: results.length,
+          hasMore: response.has_more,
+          results,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to query Notion database",
+        };
+      }
+    },
+  }),
+  webSearch: tool({
+    description:
+      "Search the web, scrape web pages, extract structured data, or map websites. Use this for any web-related information gathering.",
+    inputSchema: z.object({
+      action: z
+        .enum(["search", "scrape", "extract", "map"])
+        .describe(
+          "Action to perform: search (find info), scrape (get page content), extract (structured data), map (discover URLs)",
+        ),
+      query: z.string().optional().describe("Search query (for search action)"),
+      url: z
+        .string()
+        .optional()
+        .describe(
+          "URL to scrape, extract from, or map (for scrape/extract/map actions)",
+        ),
+      urls: z
+        .array(z.string())
+        .optional()
+        .describe("Multiple URLs for extraction (for extract action)"),
+      extractPrompt: z
+        .string()
+        .optional()
+        .describe("What to extract from the page(s) (for extract action)"),
+      limit: z
+        .number()
+        .optional()
+        .default(5)
+        .describe("Number of results to return"),
+    }),
+    execute: async ({
+      action,
+      query,
+      url,
+      urls,
+      extractPrompt,
+      limit,
+    }: {
+      action: "search" | "scrape" | "extract" | "map";
+      query?: string;
+      url?: string;
+      urls?: string[];
+      extractPrompt?: string;
+      limit: number;
+    }) => {
+      try {
+        // Note: Firecrawl MCP tools would be called here
+        // For now, return a placeholder response
+        return {
+          success: false,
+          error:
+            "Firecrawl MCP integration not yet configured. Please set up Firecrawl API credentials.",
+          action,
+          requestedQuery: query,
+          requestedUrl: url || urls?.[0],
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to perform web search operation",
+        };
+      }
+    },
+  }),
+};
+
+type ToolName = keyof typeof agenticTools;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages } = body;
+    const {
+      messages,
+      mode = "fast",
+      enabledTools,
+    } = body as {
+      messages: unknown;
+      mode?: ChatMode;
+      enabledTools?: string[];
+    };
 
     if (!messages || !Array.isArray(messages)) {
       return new Response("Invalid request: messages array required", {
@@ -196,94 +560,50 @@ export async function POST(req: Request) {
 
     // const model = getModel();
     const model = wrapLanguageModel({
-      model: google("gemini-2.5-flash"),
+      model: google("gemini-3-flash-preview"),
       middleware: devToolsMiddleware(),
     });
 
+    // For agentic mode, add system prompt and tools for step-by-step reasoning
+    const systemPrompt = mode === "agentic" ? AGENTIC_SYSTEM_PROMPT : undefined;
+
+    // Filter tools based on enabledTools if provided
+    let tools:
+      | Record<string, (typeof agenticTools)[keyof typeof agenticTools]>
+      | undefined;
+    if (mode === "agentic") {
+      if (enabledTools && enabledTools.length > 0) {
+        // Only include enabled tools
+        tools = {};
+        for (const toolName of enabledTools) {
+          if (toolName in agenticTools) {
+            tools[toolName] =
+              agenticTools[toolName as keyof typeof agenticTools];
+          }
+        }
+        if (Object.keys(tools).length === 0) {
+          tools = undefined;
+        }
+      } else {
+        // No tools specified, use all tools
+        tools = agenticTools;
+      }
+    }
+
     const result = streamText({
       model,
-      // messages: enhancedMessages,
+      system: systemPrompt,
+      tools,
+      stopWhen: mode === "agentic" ? stepCountIs(5) : undefined, // Allow multiple tool calls in agentic mode
       messages: await convertToModelMessages(enhancedMessages),
     });
 
-    // #region agent log
-    try {
-      appendFileSync(
-        "/home/ivan/Project/node/cursor-next-template/.cursor/debug.log",
-        JSON.stringify({
-          location: "api/chat/route.ts:51",
-          message: "streamText result created",
-          data: {
-            hasToTextStreamResponse: typeof result.toTextStreamResponse,
-            hasToDataStreamResponse: typeof (result as any)
-              .toDataStreamResponse,
-            resultType: typeof result,
-            resultKeys: Object.keys(result),
-          },
-          timestamp: Date.now(),
-          sessionId: "debug-session",
-          runId: "run7",
-          hypothesisId: "C",
-        }) + "\n",
-      );
-    } catch {}
-    // #endregion
-
-    const response = result.toUIMessageStreamResponse();
-    // #region agent log
-    try {
-      const headers: Record<string, string> = {};
-      response.headers.forEach((value, key) => {
-        headers[key] = value;
-      });
-      appendFileSync(
-        "/home/ivan/Project/node/cursor-next-template/.cursor/debug.log",
-        JSON.stringify({
-          location: "api/chat/route.ts:85",
-          message: "Response created with headers",
-          data: {
-            status: response.status,
-            statusText: response.statusText,
-            headers,
-            contentType: headers["content-type"],
-          },
-          timestamp: Date.now(),
-          sessionId: "debug-session",
-          runId: "run7",
-          hypothesisId: "H",
-        }) + "\n",
-      );
-    } catch {}
-    // #endregion
-    return response;
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error("AI chat error:", error);
 
     // Detect error type
     const errorInfo = detectErrorType(error);
-
-    // #region agent log
-    try {
-      appendFileSync(
-        "/home/ivan/Project/node/cursor-next-template/.cursor/debug.log",
-        JSON.stringify({
-          location: "api/chat/route.ts:68",
-          message: "API route error",
-          data: {
-            error: error instanceof Error ? error.message : String(error),
-            errorStack: error instanceof Error ? error.stack : undefined,
-            errorCode: errorInfo.code,
-            errorStatus: errorInfo.status,
-            errorDetails: error,
-          },
-          timestamp: Date.now(),
-          sessionId: "debug-session",
-          runId: "run6",
-          hypothesisId: "D",
-        }) + "\n",
-      );
-    } catch {}
-    // #endregion
 
     // Build error response
     const errorResponse: {
