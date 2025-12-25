@@ -42,7 +42,7 @@ export async function GET() {
     start(controller) {
       state.controllerRef = controller;
 
-      const send = (data: string, source: string) => {
+      const send = (data: string, _source: string) => {
         // Double-check before attempting to send - check state object
         // This must be checked BEFORE any logging to avoid errors
         if (!state.controllerRef || state.isClosed) {
@@ -57,14 +57,9 @@ export async function GET() {
             return;
           }
 
-          // Attempt to enqueue - wrap in additional try-catch to catch all error types
-          try {
-            currentController.enqueue(encoder.encode(`data: ${data}\n\n`));
-          } catch (enqueueError: unknown) {
-            // Re-throw to outer catch block
-            throw enqueueError;
-          }
-        } catch (error: unknown) {
+          // Attempt to enqueue
+          currentController.enqueue(encoder.encode(`data: ${data}\n\n`));
+        } catch (_error: unknown) {
           // Silently return - don't call cleanup() to avoid recursion
           return;
         }

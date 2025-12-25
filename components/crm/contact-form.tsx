@@ -34,7 +34,7 @@ export function ContactForm() {
       } else {
         alert(data.error || "Failed to create contact");
       }
-    } catch (error) {
+    } catch (_error) {
       alert("An error occurred while creating the contact");
     } finally {
       setIsSubmitting(false);
@@ -51,23 +51,24 @@ export function ContactForm() {
   if (!isOpen) {
     return (
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold uppercase bg-black dark:bg-white text-white dark:text-black border-3 border-black dark:border-white shadow-[4px_4px_0px_0px_#000000] dark:shadow-[4px_4px_0px_0px_#ffffff] hover:shadow-[6px_6px_0px_0px_#000000] dark:hover:shadow-[6px_6px_0px_0px_#ffffff] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-5 h-5" />
         Add Contact
       </button>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Add New Contact</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-zinc-900 border-4 border-black dark:border-white p-8 w-full max-w-md shadow-[8px_8px_0px_0px_#000000] dark:shadow-[8px_8px_0px_0px_#ffffff]">
+        <h2 className="text-2xl font-black uppercase mb-6 pb-4 border-b-4 border-black dark:border-white text-black dark:text-white">Add New Contact</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name <span className="text-red-500">*</span>
+            <label htmlFor="name" className="block text-xs font-bold uppercase mb-2 text-black dark:text-white">
+              Name <span className="text-black dark:text-white">*</span>
             </label>
             <input
               type="text"
@@ -76,12 +77,12 @@ export function ContactForm() {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-3 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white focus:outline-none focus:shadow-[2px_2px_0px_0px_#000000] dark:focus:shadow-[2px_2px_0px_0px_#ffffff] font-medium"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-xs font-bold uppercase mb-2 text-black dark:text-white">
               Email
             </label>
             <input
@@ -90,12 +91,12 @@ export function ContactForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-3 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white focus:outline-none focus:shadow-[2px_2px_0px_0px_#000000] dark:focus:shadow-[2px_2px_0px_0px_#ffffff] font-medium"
             />
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="phone" className="block text-xs font-bold uppercase mb-2 text-black dark:text-white">
               Phone
             </label>
             <input
@@ -104,12 +105,12 @@ export function ContactForm() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-3 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white focus:outline-none focus:shadow-[2px_2px_0px_0px_#000000] dark:focus:shadow-[2px_2px_0px_0px_#ffffff] font-medium"
             />
           </div>
 
           <div>
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="company" className="block text-xs font-bold uppercase mb-2 text-black dark:text-white">
               Company
             </label>
             <input
@@ -118,12 +119,12 @@ export function ContactForm() {
               name="company"
               value={formData.company}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-3 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white focus:outline-none focus:shadow-[2px_2px_0px_0px_#000000] dark:focus:shadow-[2px_2px_0px_0px_#ffffff] font-medium"
             />
           </div>
 
           <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="role" className="block text-xs font-bold uppercase mb-2 text-black dark:text-white">
               Role
             </label>
             <input
@@ -132,22 +133,22 @@ export function ContactForm() {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-3 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white focus:outline-none focus:shadow-[2px_2px_0px_0px_#000000] dark:focus:shadow-[2px_2px_0px_0px_#ffffff] font-medium"
             />
           </div>
 
-          <div className="flex gap-2 justify-end pt-4">
+          <div className="flex gap-3 justify-end pt-6 border-t-3 border-black dark:border-white mt-6">
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 text-sm font-bold uppercase bg-white dark:bg-zinc-900 text-black dark:text-white border-3 border-black dark:border-white shadow-[3px_3px_0px_0px_#000000] dark:shadow-[3px_3px_0px_0px_#ffffff] hover:shadow-[5px_5px_0px_0px_#000000] dark:hover:shadow-[5px_5px_0px_0px_#ffffff] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-3 text-sm font-bold uppercase text-white dark:text-black bg-black dark:bg-white border-3 border-black dark:border-white shadow-[3px_3px_0px_0px_#000000] dark:shadow-[3px_3px_0px_0px_#ffffff] hover:shadow-[5px_5px_0px_0px_#000000] dark:hover:shadow-[5px_5px_0px_0px_#ffffff] hover:translate-x-[-2px] hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isSubmitting ? "Creating..." : "Create Contact"}
             </button>

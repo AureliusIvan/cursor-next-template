@@ -1,6 +1,5 @@
-import { ContactForm } from "@/components/crm/contact-form";
-import { ContactList } from "@/components/crm/contact-list";
 import prisma from "@/lib/prisma";
+import { ContactsPageClient } from "./contacts-page-client";
 
 export const dynamic = "force-dynamic";
 
@@ -15,16 +14,5 @@ export default async function ContactsPage() {
     }),
   ]);
 
-  return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Contacts</h1>
-        <ContactForm />
-      </div>
-      <ContactList
-        initialContacts={contacts}
-        lastSyncedAt={lastSync?.lastSyncTime}
-      />
-    </div>
-  );
+  return <ContactsPageClient initialContacts={contacts} lastSyncedAt={lastSync?.lastSyncTime} />;
 }

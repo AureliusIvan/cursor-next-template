@@ -1,9 +1,8 @@
 import { Client } from "@notionhq/client";
 import "server-only";
 
-export const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
-});
+// Private cached client instance
+let notionClient: Client | null = null;
 
 export const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
@@ -37,7 +36,15 @@ export function getNotionClient() {
   if (!process.env.NOTION_API_KEY) {
     throw new Error("NOTION_API_KEY is not defined");
   }
-  return notion;
+
+  // Create client lazily and cache it
+  if (!notionClient) {
+    notionClient = new Client({
+      auth: process.env.NOTION_API_KEY,
+    });
+  }
+
+  return notionClient;
 }
 
 export function getDatabaseId() {
