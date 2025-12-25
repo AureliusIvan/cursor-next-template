@@ -49,21 +49,21 @@ export function ContactList({ initialContacts, lastSyncedAt, searchQuery }: Cont
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center bg-white dark:bg-zinc-900 border-3 border-black dark:border-white p-4 shadow-[4px_4px_0px_0px_#000000] dark:shadow-[4px_4px_0px_0px_#ffffff]">
-        <div className="text-sm font-bold uppercase text-black dark:text-white">
+      <div className="flex justify-between items-center rounded-3xl border border-dashed bg-muted/50 p-4">
+        <div className="text-sm text-muted-foreground">
           Last Synced: {lastSyncedAt ? new Date(lastSyncedAt).toLocaleString() : "Never"}
         </div>
         <SyncButton />
       </div>
 
       {isSearching ? (
-        <div className="border-3 border-black dark:border-white bg-white dark:bg-zinc-900 p-12 text-center shadow-[4px_4px_0px_0px_#000000] dark:shadow-[4px_4px_0px_0px_#ffffff]">
-          <p className="text-lg font-bold uppercase text-black dark:text-white">Searching...</p>
+        <div className="flex h-96 items-center justify-center rounded-3xl border border-dashed">
+          <p className="text-muted-foreground">Searching...</p>
         </div>
       ) : contacts.length === 0 ? (
-        <div className="border-3 border-black dark:border-white bg-white dark:bg-zinc-900 p-12 text-center shadow-[4px_4px_0px_0px_#000000] dark:shadow-[4px_4px_0px_0px_#ffffff]">
-          <p className="text-lg font-bold uppercase text-black dark:text-white">No contacts found.</p>
-          <p className="text-sm font-medium mt-2 text-black dark:text-white">
+        <div className="flex h-96 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed">
+          <p className="text-muted-foreground">No contacts found.</p>
+          <p className="text-sm text-muted-foreground">
             {searchQuery && searchQuery.trim() !== "" ? "Try a different search term." : "Sync with Notion to get started."}
           </p>
         </div>
@@ -72,27 +72,27 @@ export function ContactList({ initialContacts, lastSyncedAt, searchQuery }: Cont
           {contacts.map((contact) => (
             <div
               key={contact.id}
-              className="border-3 border-black dark:border-white bg-white dark:bg-zinc-900 p-5 shadow-[4px_4px_0px_0px_#000000] dark:shadow-[4px_4px_0px_0px_#ffffff] hover:shadow-[6px_6px_0px_0px_#000000] dark:hover:shadow-[6px_6px_0px_0px_#ffffff] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+              className="rounded-2xl border bg-card p-5 hover:bg-accent transition-colors cursor-pointer"
             >
-              <div className="border-b-3 border-black dark:border-white pb-3 mb-3">
-                <h3 className="text-lg font-black uppercase truncate text-black dark:text-white">{contact.name}</h3>
+              <div className="border-b pb-3 mb-3">
+                <h3 className="text-lg font-semibold truncate">{contact.name}</h3>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase text-xs mb-1 text-black dark:text-white">Email</span>
-                  <span className="font-medium truncate text-black dark:text-zinc-300">{contact.email || "-"}</span>
+                  <span className="text-xs font-medium text-muted-foreground mb-1">Email</span>
+                  <span className="truncate">{contact.email || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase text-xs mb-1 text-black dark:text-white">Phone</span>
-                  <span className="font-medium text-black dark:text-zinc-300">{contact.phone || "-"}</span>
+                  <span className="text-xs font-medium text-muted-foreground mb-1">Phone</span>
+                  <span>{contact.phone || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase text-xs mb-1 text-black dark:text-white">Company</span>
-                  <span className="font-medium truncate text-black dark:text-zinc-300">{contact.company || "-"}</span>
+                  <span className="text-xs font-medium text-muted-foreground mb-1">Company</span>
+                  <span className="truncate">{contact.company || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase text-xs mb-1 text-black dark:text-white">Role</span>
-                  <span className="font-medium truncate text-black dark:text-zinc-300">{contact.role || "-"}</span>
+                  <span className="text-xs font-medium text-muted-foreground mb-1">Role</span>
+                  <span className="truncate">{contact.role || "-"}</span>
                 </div>
               </div>
             </div>

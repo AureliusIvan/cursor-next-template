@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function SyncButton() {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -36,18 +37,19 @@ export function SyncButton() {
   };
 
   return (
-    <button
+    <Button
       type="button"
       onClick={handleSync}
       disabled={isSyncing}
-      className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold uppercase bg-black dark:bg-white text-white dark:text-black border-3 border-black dark:border-white shadow-[3px_3px_0px_0px_#000000] dark:shadow-[3px_3px_0px_0px_#ffffff] hover:shadow-[5px_5px_0px_0px_#000000] dark:hover:shadow-[5px_5px_0px_0px_#ffffff] hover:translate-x-[-2px] hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      variant="outline"
+      className="rounded-2xl"
     >
       {isSyncing ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : (
-        <RefreshCw className="w-4 h-4" />
+        <RefreshCw className="mr-2 h-4 w-4" />
       )}
       {isSyncing ? "Syncing..." : "Sync Now"}
-    </button>
+    </Button>
   );
 }
