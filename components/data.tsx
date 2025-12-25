@@ -202,10 +202,10 @@ export const sidebarItems: SidebarItem[] = [
     title: "Files",
     icon: <FileText className="h-4 w-4" />,
     items: [
-      { title: "Recent", url: "#" },
-      { title: "Shared with me", url: "#", badge: "3" },
-      { title: "Favorites", url: "#" },
-      { title: "Trash", url: "#" },
+      { title: "Recent", url: "/dashboard/files" },
+      { title: "Shared with me", url: "/dashboard/files/shared", badge: "3" },
+      { title: "Favorites", url: "/dashboard/files/favorites" },
+      { title: "Trash", url: "/dashboard/files/trash" },
     ],
   },
   {
