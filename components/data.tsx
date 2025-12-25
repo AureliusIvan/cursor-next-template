@@ -11,6 +11,7 @@ import {
   ImageIcon,
   Layers,
   LayoutGrid,
+  Sparkles,
   Users,
   Video,
 } from "lucide-react";
@@ -250,5 +251,10 @@ export const sidebarItems: SidebarItem[] = [
     title: "CRM",
     icon: <Briefcase className="h-4 w-4" />,
     items: [{ title: "Contacts", url: "/dashboard/crm/contacts" }],
+  },
+  {
+    title: "AI",
+    icon: <Sparkles className="h-4 w-4" />,
+    url: "/dashboard/ai",
   },
 ];

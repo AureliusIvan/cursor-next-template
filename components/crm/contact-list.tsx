@@ -1,6 +1,7 @@
 "use client";
 
 import { Contact } from "@prisma/client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SyncButton } from "./sync-button";
 import { useContactStream } from "@/app/hooks/use-contact-stream";
@@ -70,8 +71,9 @@ export function ContactList({ initialContacts, lastSyncedAt, searchQuery }: Cont
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {contacts.map((contact) => (
-            <div
+            <Link
               key={contact.id}
+              href={`/dashboard/crm/contacts/${contact.id}`}
               className="rounded-2xl border bg-card p-5 hover:bg-accent transition-colors cursor-pointer"
             >
               <div className="border-b pb-3 mb-3">
@@ -95,7 +97,7 @@ export function ContactList({ initialContacts, lastSyncedAt, searchQuery }: Cont
                   <span className="truncate">{contact.role || "-"}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

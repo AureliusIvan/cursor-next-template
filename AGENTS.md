@@ -102,3 +102,4 @@ import { ErrorBoundary } from "@/app/components/debug/error-boundary";
 ## Development
 - Check `.cursor/tmp/hooks.log` for hooks log information everytime modifying the codebase
 - Update USER-CHOICE.md if user setup new configurations (create one if NOT EXIST; refer to USER-CHOICE-TEMPLATE.md)
+- for AI development, view the logs on .devtools/generations.json
