@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2, RefreshCw } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 export function SyncButton() {
@@ -14,23 +15,45 @@ export function SyncButton() {
     try {
       const response = await fetch("/api/crm/sync", { method: "POST" });
       const data = await response.json();
-      
+
       if (data.success) {
-        let message = data.message;
-        if (data.algoliaSync) {
-          if (data.algoliaSync.success) {
-            message += `\nAlgolia: Synced ${data.algoliaSync.count} contacts`;
-          } else {
-            message += `\nAlgolia: ${data.algoliaSync.error || "Sync failed"}`;
-          }
-        }
-        alert(message); // Replace with toast in real app
+        const message = data.message;
+        const algoliaMessage = data.algoliaSync
+          ? data.algoliaSync.success
+            ? `Algolia: Synced ${data.algoliaSync.count} contacts`
+            : `Algolia: ${data.algoliaSync.error || "Sync failed"}`
+          : null;
+
+        toast.success(message, {
+          description: algoliaMessage,
+          duration: 5000,
+        });
+
         router.refresh(); // Reload data
       } else {
-        alert(`Sync failed: ${data.error || "Unknown error"}`);
+        // Show detailed error message
+        const errorMessage = data.error || "Unknown error";
+        const errorDetails = data.details
+          ? typeof data.details === "string"
+            ? data.details
+            : JSON.stringify(data.details, null, 2)
+          : null;
+
+        toast.error("Sync failed", {
+          description:
+            errorMessage + (errorDetails ? `\n\nDetails: ${errorDetails}` : ""),
+          duration: 8000,
+        });
       }
-    } catch (_error) {
-      alert("An error occurred during sync");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred during sync";
+      toast.error("Sync error", {
+        description: errorMessage,
+        duration: 8000,
+      });
     } finally {
       setIsSyncing(false);
     }

@@ -110,3 +110,19 @@ model SyncState {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model Company {
+  id          Int       @id @default(autoincrement())
+  name        String
+  website     String?
+  industry    String?
+  description String?
+  phone       String?
+  address     String?
+  size        String?   // e.g., "1-10", "11-50", "51-200", etc.
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([name])
+  @@index([industry])
+}

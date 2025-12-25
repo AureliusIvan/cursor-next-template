@@ -3,6 +3,7 @@ import {
   BookOpen,
   Briefcase,
   Brush,
+  Building2,
   Code,
   CuboidIcon,
   FileText,
@@ -250,7 +251,10 @@ export const sidebarItems: SidebarItem[] = [
   {
     title: "CRM",
     icon: <Briefcase className="h-4 w-4" />,
-    items: [{ title: "Contacts", url: "/dashboard/crm/contacts" }],
+    items: [
+      { title: "Contacts", url: "/dashboard/crm/contacts" },
+      { title: "Companies", url: "/dashboard/crm/contacts/companies" },
+    ],
   },
   {
     title: "AI",
