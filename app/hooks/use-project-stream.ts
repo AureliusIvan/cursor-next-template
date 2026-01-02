@@ -1,7 +1,7 @@
 "use client";
 
-import type { Project } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
+import type { Project } from "@/app/generated/prisma/client/browser";
 
 interface UseProjectStreamOptions {
   initialProjects: Project[];
@@ -25,16 +25,14 @@ export function useProjectStream({ initialProjects }: UseProjectStreamOptions) {
           setProjects((prev) => [message.data, ...prev]);
         } else if (message.type === "project.updated") {
           // Update existing project in the list
-          setProjects((prev) =>
-            prev.map((p) => (p.id === message.data.id ? message.data : p)),
-          );
+          setProjects((prev) => prev.map((p) => (p.id === message.data.id ? message.data : p)));
         } else if (message.type === "project.deleted") {
           // Remove deleted project from the list
           setProjects((prev) => prev.filter((p) => p.id !== message.data.id));
         } else if (message.type === "ping") {
           // Keep-alive ping, no action needed
         }
-      } catch (error) {
+      } catch {
         // Ignore parse errors
       }
     };

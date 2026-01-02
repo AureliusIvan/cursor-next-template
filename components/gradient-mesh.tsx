@@ -1,6 +1,6 @@
 "use client";
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // Vertex shader
 const vert = `
@@ -119,9 +119,9 @@ interface NovatrixProps {
 // Convert hex to normalized RGB
 const hexToRgb = (hex: string): [number, number, number] => {
   const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substring(0, 2), 16) / 255;
-  const g = parseInt(cleanHex.substring(2, 4), 16) / 255;
-  const b = parseInt(cleanHex.substring(4, 6), 16) / 255;
+  const r = Number.parseInt(cleanHex.substring(0, 2), 16) / 255;
+  const g = Number.parseInt(cleanHex.substring(2, 4), 16) / 255;
+  const b = Number.parseInt(cleanHex.substring(4, 6), 16) / 255;
   return [r, g, b];
 };
 
@@ -172,11 +172,7 @@ export function GradientMesh(props: NovatrixProps) {
       uWaveFreq: { value: waveFreq },
       uWaveSpeed: { value: waveSpeed },
       uResolution: {
-        value: new Color(
-          gl.canvas.width,
-          gl.canvas.height,
-          gl.canvas.width / gl.canvas.height,
-        ),
+        value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height),
       },
       uGrain: { value: grain },
     };

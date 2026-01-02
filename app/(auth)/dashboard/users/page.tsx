@@ -17,7 +17,7 @@ export default async function UsersPage() {
   }
 
   // Get user with role
-  const userId = parseInt(String(session.user.id), 10);
+  const userId = Number.parseInt(String(session.user.id), 10);
   if (isNaN(userId)) {
     redirect("/login");
   }
@@ -56,10 +56,8 @@ export default async function UsersPage() {
     <main className="flex-1 p-4 md:p-6">
       <div className="rounded-3xl border border-dashed bg-background p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold">User Management</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage users, roles, and permissions
-          </p>
+          <h1 className="font-semibold text-2xl">User Management</h1>
+          <p className="mt-1 text-muted-foreground text-sm">Manage users, roles, and permissions</p>
         </div>
         <UsersPageClient initialUsers={users} />
       </div>

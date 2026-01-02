@@ -16,10 +16,7 @@ export default async function ContactsPage() {
 
   return (
     <main className="flex-1 p-4 md:p-6">
-      <ContactsPageClient
-        initialContacts={contacts}
-        lastSyncedAt={lastSync?.lastSyncTime}
-      />
+      <ContactsPageClient initialContacts={contacts} lastSyncedAt={lastSync?.lastSyncTime} />
     </main>
   );
 }

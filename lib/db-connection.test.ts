@@ -41,13 +41,8 @@ test("database connection", async () => {
     expect(typeof result.userCount).toBe("number");
   } catch (error) {
     // If database is not reachable, skip the test instead of failing
-    if (
-      error instanceof Error &&
-      error.message.includes("Can't reach database server")
-    ) {
-      console.log(
-        "⚠ Skipping database connection test: Database server not reachable",
-      );
+    if (error instanceof Error && error.message.includes("Can't reach database server")) {
+      console.log("⚠ Skipping database connection test: Database server not reachable");
       return;
     }
     throw error;

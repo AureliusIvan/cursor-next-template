@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -41,11 +40,7 @@ interface UserSessionsDialogProps {
   user: User | null;
 }
 
-export function UserSessionsDialog({
-  open,
-  onOpenChange,
-  user,
-}: UserSessionsDialogProps) {
+export function UserSessionsDialog({ open, onOpenChange, user }: UserSessionsDialogProps) {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,9 +64,7 @@ export function UserSessionsDialog({
 
       setSessions(result.sessions || []);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to fetch sessions",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to fetch sessions");
     } finally {
       setIsLoading(false);
     }
@@ -79,18 +72,14 @@ export function UserSessionsDialog({
 
   if (!user) return null;
 
-  const activeSessions = sessions.filter(
-    (session) => new Date(session.expiresAt) > new Date(),
-  );
+  const activeSessions = sessions.filter((session) => new Date(session.expiresAt) > new Date());
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+    <Dialog onOpenChange={onOpenChange} open={open}>
+      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Sessions for {user.name || user.email}</DialogTitle>
-          <DialogDescription>
-            View all active and expired sessions for this user.
-          </DialogDescription>
+          <DialogDescription>View all active and expired sessions for this user.</DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
@@ -103,7 +92,7 @@ export function UserSessionsDialog({
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               {activeSessions.length} active session
               {activeSessions.length !== 1 ? "s" : ""}
             </div>
@@ -126,15 +115,11 @@ export function UserSessionsDialog({
                       <TableCell className="max-w-xs truncate">
                         {session.userAgent || "-"}
                       </TableCell>
-                      <TableCell>
-                        {format(new Date(session.createdAt), "PPp")}
-                      </TableCell>
-                      <TableCell>
-                        {format(new Date(session.expiresAt), "PPp")}
-                      </TableCell>
+                      <TableCell>{format(new Date(session.createdAt), "PPp")}</TableCell>
+                      <TableCell>{format(new Date(session.expiresAt), "PPp")}</TableCell>
                       <TableCell>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${
+                          className={`rounded-full px-2 py-1 text-xs ${
                             isExpired
                               ? "bg-muted text-muted-foreground"
                               : "bg-green-500/10 text-green-600 dark:text-green-400"

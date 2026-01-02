@@ -3,7 +3,7 @@ import { companyEvents } from "@/lib/events";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET() {
+export function GET() {
   const encoder = new TextEncoder();
 
   // Use a shared state object that all closures reference
@@ -16,7 +16,9 @@ export async function GET() {
   };
 
   const cleanup = () => {
-    if (state.isClosed) return; // Prevent double cleanup
+    if (state.isClosed) {
+      return; // Prevent double cleanup
+    }
 
     // Null out controller FIRST to prevent any send operations
     // This is the critical guard - even if callbacks are running, they'll fail this check
@@ -71,10 +73,7 @@ export async function GET() {
       // Listen for company events
       state.handleCompanyEvent = (company: unknown) => {
         if (!state.isClosed && state.controllerRef) {
-          send(
-            JSON.stringify({ type: "company.created", data: company }),
-            "event",
-          );
+          send(JSON.stringify({ type: "company.created", data: company }), "event");
         }
       };
 
@@ -97,7 +96,7 @@ export async function GET() {
         // Only proceed if we have a valid controller and stream is not closed
         // Attempt to send ping - send() will handle errors gracefully
         send(JSON.stringify({ type: "ping" }), "ping");
-      }, 30000);
+      }, 30_000);
     },
     cancel() {
       // Cleanup when stream is cancelled (client disconnect)

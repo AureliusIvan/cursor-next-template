@@ -1,7 +1,7 @@
 "use client";
 
-import type { Contact } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
+import type { Contact } from "@/app/generated/prisma/client/browser";
 
 interface UseContactStreamOptions {
   initialContacts: Contact[];
@@ -26,7 +26,7 @@ export function useContactStream({ initialContacts }: UseContactStreamOptions) {
         } else if (message.type === "ping") {
           // Keep-alive ping, no action needed
         }
-      } catch (error) {
+      } catch {
         // Ignore parse errors
       }
     };

@@ -6,8 +6,7 @@ export async function proxy(request: NextRequest) {
 
   // Public routes that don't require authentication
   const publicRoutes = ["/login", "/signup", "/"];
-  const isPublicRoute =
-    publicRoutes.includes(pathname) || pathname.startsWith("/api/auth");
+  const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith("/api/auth");
 
   // Check session for protected routes
   if (!isPublicRoute) {

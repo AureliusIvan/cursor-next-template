@@ -21,7 +21,7 @@ async function testSyncAPI() {
     const status = response.status;
 
     console.log(`📊 Status Code: ${status}`);
-    console.log(`📦 Response:`, JSON.stringify(data, null, 2));
+    console.log("📦 Response:", JSON.stringify(data, null, 2));
 
     if (data.success) {
       console.log(`\n✅ Sync successful! Synced ${data.count} contacts`);
@@ -35,7 +35,7 @@ async function testSyncAPI() {
     } else {
       console.log(`\n❌ Sync failed: ${data.error}`);
       if (data.details) {
-        console.log(`📋 Details:`, JSON.stringify(data.details, null, 2));
+        console.log("📋 Details:", JSON.stringify(data.details, null, 2));
       }
     }
 

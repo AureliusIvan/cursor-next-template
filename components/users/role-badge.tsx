@@ -7,10 +7,7 @@ interface RoleBadgeProps {
 
 export function RoleBadge({ role }: RoleBadgeProps) {
   return (
-    <Badge
-      variant={role === "OWNER" ? "default" : "secondary"}
-      className="rounded-full"
-    >
+    <Badge className="rounded-full" variant={role === "OWNER" ? "default" : "secondary"}>
       {role}
     </Badge>
   );

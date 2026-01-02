@@ -12,11 +12,7 @@ interface ContactListProps {
   searchQuery?: string;
 }
 
-export function ContactList({
-  initialContacts,
-  lastSyncedAt,
-  searchQuery,
-}: ContactListProps) {
+export function ContactList({ initialContacts, lastSyncedAt, searchQuery }: ContactListProps) {
   const streamContacts = useContactStream({ initialContacts });
   const [searchContacts, setSearchContacts] = useState<Contact[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -32,9 +28,7 @@ export function ContactList({
     setIsSearching(true);
     const fetchSearchResults = async () => {
       try {
-        const response = await fetch(
-          `/api/crm/contacts?search=${encodeURIComponent(searchQuery)}`,
-        );
+        const response = await fetch(`/api/crm/contacts?search=${encodeURIComponent(searchQuery)}`);
         const data = await response.json();
         if (response.ok) {
           setSearchContacts(data.contacts || []);
@@ -52,15 +46,13 @@ export function ContactList({
   }, [searchQuery]);
 
   // Use search results when searching, otherwise use stream contacts
-  const contacts =
-    searchQuery && searchQuery.trim() !== "" ? searchContacts : streamContacts;
+  const contacts = searchQuery && searchQuery.trim() !== "" ? searchContacts : streamContacts;
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center rounded-3xl border border-dashed bg-muted/50 p-4">
-        <div className="text-sm text-muted-foreground">
-          Last Synced:{" "}
-          {lastSyncedAt ? new Date(lastSyncedAt).toLocaleString() : "Never"}
+      <div className="flex items-center justify-between rounded-3xl border border-dashed bg-muted/50 p-4">
+        <div className="text-muted-foreground text-sm">
+          Last Synced: {lastSyncedAt ? new Date(lastSyncedAt).toLocaleString() : "Never"}
         </div>
         <SyncButton />
       </div>
@@ -72,48 +64,38 @@ export function ContactList({
       ) : contacts.length === 0 ? (
         <div className="flex h-96 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed">
           <p className="text-muted-foreground">No contacts found.</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {searchQuery && searchQuery.trim() !== ""
               ? "Try a different search term."
               : "Sync with Notion to get started."}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {contacts.map((contact) => (
             <Link
-              key={contact.id}
+              className="cursor-pointer rounded-2xl border bg-card p-5 transition-colors hover:bg-accent"
               href={`/dashboard/crm/contacts/${contact.id}`}
-              className="rounded-2xl border bg-card p-5 hover:bg-accent transition-colors cursor-pointer"
+              key={contact.id}
             >
-              <div className="border-b pb-3 mb-3">
-                <h3 className="text-lg font-semibold truncate">
-                  {contact.name}
-                </h3>
+              <div className="mb-3 border-b pb-3">
+                <h3 className="truncate font-semibold text-lg">{contact.name}</h3>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex flex-col">
-                  <span className="text-xs font-medium text-muted-foreground mb-1">
-                    Email
-                  </span>
+                  <span className="mb-1 font-medium text-muted-foreground text-xs">Email</span>
                   <span className="truncate">{contact.email || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-medium text-muted-foreground mb-1">
-                    Phone
-                  </span>
+                  <span className="mb-1 font-medium text-muted-foreground text-xs">Phone</span>
                   <span>{contact.phone || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-medium text-muted-foreground mb-1">
-                    Company
-                  </span>
+                  <span className="mb-1 font-medium text-muted-foreground text-xs">Company</span>
                   <span className="truncate">{contact.company || "-"}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-medium text-muted-foreground mb-1">
-                    Role
-                  </span>
+                  <span className="mb-1 font-medium text-muted-foreground text-xs">Role</span>
                   <span className="truncate">{contact.role || "-"}</span>
                 </div>
               </div>

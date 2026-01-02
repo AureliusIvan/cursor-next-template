@@ -40,16 +40,12 @@ export function SyncButton() {
           : null;
 
         toast.error("Sync failed", {
-          description:
-            errorMessage + (errorDetails ? `\n\nDetails: ${errorDetails}` : ""),
+          description: errorMessage + (errorDetails ? `\n\nDetails: ${errorDetails}` : ""),
           duration: 8000,
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred during sync";
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during sync";
       toast.error("Sync error", {
         description: errorMessage,
         duration: 8000,
@@ -61,11 +57,11 @@ export function SyncButton() {
 
   return (
     <Button
-      type="button"
-      onClick={handleSync}
-      disabled={isSyncing}
-      variant="outline"
       className="rounded-2xl"
+      disabled={isSyncing}
+      onClick={handleSync}
+      type="button"
+      variant="outline"
     >
       {isSyncing ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

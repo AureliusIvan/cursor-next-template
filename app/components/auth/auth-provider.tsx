@@ -10,9 +10,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const session = authClient.useSession();
 
-  return (
-    <AuthContext.Provider value={session}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={session}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

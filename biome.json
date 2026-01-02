@@ -1,32 +1,95 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "includes": [
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.json",
+      "**/*.jsonc",
+      "**/*.css",
+      "!!**/node_modules",
+      "!!**/.next",
+      "!!**/.cursor/tmp",
+      "!!**/dist",
+      "!!**/build",
+      "!!**/coverage",
+      "!!**/*.min.js",
+      "!!**/*.min.css",
+      "!!**/public/sw.js",
+      "!!**/public/workbox-*.js",
+      "!!**/.env*",
+      "!!**/*.log"
+    ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "noParameterAssign": "error",
+        "useConst": "error",
+        "useTemplate": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "warn",
+        "noConsole": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      },
+      "performance": {
+        "noAccumulatingSpread": "warn"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn",
+        "noExcessiveNestedTestSuites": "off"
+      },
+      "a11y": {
+        "recommended": true
+      }
     }
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "double",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "es5",
+      "arrowParentheses": "always"
+    },
+    "globals": ["React"]
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
     }
   },
   "css": {
     "parser": {
       "tailwindDirectives": true
+    },
+    "formatter": {
+      "enabled": true
     }
   },
   "assist": {
@@ -36,5 +99,6 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "extends": ["ultracite/biome/core"]
 }

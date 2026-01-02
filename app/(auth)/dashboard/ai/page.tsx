@@ -153,7 +153,7 @@ export default function Chat() {
               name: a.name,
             })),
           },
-        },
+        }
       );
       setInput("");
       setAttachments([]);
@@ -186,9 +186,7 @@ export default function Chat() {
 
   const toggleTool = (toolId: string) => {
     setTools((prev) =>
-      prev.map((tool) =>
-        tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool,
-      ),
+      prev.map((tool) => (tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool))
     );
   };
 
@@ -198,25 +196,25 @@ export default function Chat() {
     <main className="flex flex-1 flex-col p-4 md:p-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 flex items-center justify-between"
+        initial={{ opacity: 0, y: -10 }}
       >
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold">AI Assistant</h1>
-            <p className="text-sm text-muted-foreground">Powered by LLM</p>
+            <h1 className="font-semibold text-xl">AI Assistant</h1>
+            <p className="text-muted-foreground text-sm">Powered by LLM</p>
           </div>
         </div>
         {messages.length > 0 && (
           <Button
-            variant="ghost"
-            size="sm"
             className="rounded-xl text-muted-foreground hover:text-destructive"
             onClick={() => setMessages([])}
+            size="sm"
+            variant="ghost"
           >
             <Trash2 className="mr-2 h-4 w-4" />
             Clear
@@ -230,16 +228,16 @@ export default function Chat() {
           <AnimatePresence mode="popLayout">
             {messages.length === 0 ? (
               <motion.div
-                key="empty"
-                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
                 className="flex flex-col items-center justify-center py-16"
+                exit={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                key="empty"
               >
                 {/* Animated gradient orb */}
                 <motion.div
-                  className="relative mb-8 h-32 w-32"
                   animate={{ rotate: 360 }}
+                  className="relative mb-8 h-32 w-32"
                   transition={{
                     duration: 20,
                     repeat: Number.POSITIVE_INFINITY,
@@ -254,9 +252,7 @@ export default function Chat() {
                   </div>
                 </motion.div>
 
-                <h2 className="mb-2 text-2xl font-semibold">
-                  How can I help you?
-                </h2>
+                <h2 className="mb-2 font-semibold text-2xl">How can I help you?</h2>
                 <p className="mb-6 text-center text-muted-foreground">
                   Ask me anything or try one of these suggestions
                 </p>
@@ -264,15 +260,15 @@ export default function Chat() {
                 <div className="flex flex-wrap justify-center gap-2">
                   {suggestions.map((suggestion, i) => (
                     <motion.div
-                      key={suggestion}
-                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      key={suggestion}
                       transition={{ delay: i * 0.1 }}
                     >
                       <Badge
-                        variant="outline"
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-colors hover:bg-primary/10"
                         onClick={() => handleSuggestionClick(suggestion)}
+                        variant="outline"
                       >
                         {suggestion}
                       </Badge>
@@ -283,14 +279,14 @@ export default function Chat() {
             ) : (
               messages.map((message, index) => (
                 <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: index * 0.05 }}
                   className={`flex gap-3 ${
                     message.role === "user" ? "flex-row-reverse" : "flex-row"
                   }`}
+                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  key={message.id}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Avatar className="h-8 w-8 shrink-0">
                     <AvatarFallback
@@ -318,10 +314,7 @@ export default function Chat() {
                         {message.parts.map((part, i) => {
                           if (part.type === "text") {
                             return (
-                              <p
-                                key={`${message.id}-${i}`}
-                                className="whitespace-pre-wrap"
-                              >
+                              <p className="whitespace-pre-wrap" key={`${message.id}-${i}`}>
                                 {part.text}
                               </p>
                             );
@@ -335,8 +328,8 @@ export default function Chat() {
                           if (part.type === "text") {
                             return (
                               <Streamdown
-                                key={`${message.id}-${i}`}
                                 className="prose prose-sm dark:prose-invert max-w-none"
+                                key={`${message.id}-${i}`}
                               >
                                 {part.text}
                               </Streamdown>
@@ -354,11 +347,11 @@ export default function Chat() {
             {/* Loading indicator */}
             {isLoading && (
               <motion.div
-                key="loading"
-                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
                 className="flex gap-3"
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                key="loading"
               >
                 <Avatar className="h-8 w-8 shrink-0">
                   <AvatarFallback className="bg-muted">
@@ -368,25 +361,25 @@ export default function Chat() {
                 <Card className="rounded-2xl rounded-tl-sm border-0 bg-muted/50 px-4 py-3 shadow-none">
                   <div className="flex gap-1">
                     <motion.div
-                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
                       animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}
+                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
+                      transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, delay: 0 }}
                     />
                     <motion.div
-                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
                       animate={{ opacity: [0.4, 1, 0.4] }}
+                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
                       transition={{
                         duration: 1.5,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         delay: 0.2,
                       }}
                     />
                     <motion.div
-                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
                       animate={{ opacity: [0.4, 1, 0.4] }}
+                      className="h-2 w-2 rounded-full bg-muted-foreground/50"
                       transition={{
                         duration: 1.5,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         delay: 0.4,
                       }}
                     />
@@ -400,8 +393,8 @@ export default function Chat() {
 
       {/* Input Area */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.2 }}
       >
         <Card className="mt-4 rounded-2xl border bg-card/50 p-3 shadow-lg backdrop-blur-sm">
@@ -410,21 +403,19 @@ export default function Chat() {
             <div className="mb-3 flex flex-wrap gap-2">
               {attachments.map((attachment) => (
                 <div
-                  key={attachment.id}
                   className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-1.5 text-sm"
+                  key={attachment.id}
                 >
                   {attachment.type.startsWith("image/") ? (
                     <ImageIcon className="h-4 w-4 text-muted-foreground" />
                   ) : (
                     <FileText className="h-4 w-4 text-muted-foreground" />
                   )}
-                  <span className="max-w-[120px] truncate">
-                    {attachment.name}
-                  </span>
+                  <span className="max-w-[120px] truncate">{attachment.name}</span>
                   <button
-                    type="button"
-                    onClick={() => removeAttachment(attachment.id)}
                     className="text-muted-foreground hover:text-foreground"
+                    onClick={() => removeAttachment(attachment.id)}
+                    type="button"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -434,51 +425,49 @@ export default function Chat() {
           )}
 
           <form
+            className="space-y-3"
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
-            className="space-y-3"
           >
             {/* Row 1: Attachment, Textarea, Send */}
             <div className="flex items-center gap-2">
               {/* Attachment button */}
               <Button
+                className="h-10 w-10 shrink-0 rounded-xl text-muted-foreground hover:text-foreground"
+                disabled={control.isPending}
+                onClick={() => fileInputRef.current?.click()}
+                size="icon"
                 type="button"
                 variant="ghost"
-                size="icon"
-                className="h-10 w-10 shrink-0 rounded-xl text-muted-foreground hover:text-foreground"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={control.isPending}
               >
                 <Plus className="h-5 w-5" />
               </Button>
               <input
-                ref={fileInputRef}
-                type="file"
-                multiple
                 accept="image/*,application/pdf,text/*"
                 className="hidden"
+                multiple
                 onChange={handleFileSelect}
+                ref={fileInputRef}
+                type="file"
               />
 
               <Textarea
-                ref={textareaRef}
-                value={input}
+                className="min-h-[44px] flex-1 resize-none rounded-xl border-0 bg-transparent shadow-none focus-visible:ring-0"
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Type a message..."
-                className="min-h-[44px] flex-1 resize-none rounded-xl border-0 bg-transparent shadow-none focus-visible:ring-0"
+                ref={textareaRef}
                 rows={1}
+                value={input}
               />
 
               <Button
-                type="submit"
-                size="icon"
                 className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 transition-transform hover:scale-105"
-                disabled={
-                  (!input.trim() && attachments.length === 0) || isLoading
-                }
+                disabled={(!input.trim() && attachments.length === 0) || isLoading}
+                size="icon"
+                type="submit"
               >
                 <Send className="h-4 w-4" />
               </Button>
@@ -489,31 +478,31 @@ export default function Chat() {
               {/* Mode buttons */}
               <div className="flex items-center rounded-xl bg-muted/50 p-1">
                 <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
                   className={cn(
                     "h-8 gap-1.5 rounded-lg px-3 text-xs transition-all",
                     mode === "fast"
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "text-muted-foreground hover:text-foreground",
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                   onClick={() => setMode("fast")}
+                  size="sm"
+                  type="button"
+                  variant="ghost"
                 >
                   <Zap className="h-3.5 w-3.5" />
                   Fast
                 </Button>
                 <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
                   className={cn(
                     "h-8 gap-1.5 rounded-lg px-3 text-xs transition-all",
                     mode === "agentic"
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "text-muted-foreground hover:text-foreground",
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                   onClick={() => setMode("agentic")}
+                  size="sm"
+                  type="button"
+                  variant="ghost"
                 >
                   <Brain className="h-3.5 w-3.5" />
                   Agentic
@@ -521,18 +510,18 @@ export default function Chat() {
               </div>
 
               {/* Tools button with dialog */}
-              <Dialog open={toolsDialogOpen} onOpenChange={setToolsDialogOpen}>
+              <Dialog onOpenChange={setToolsDialogOpen} open={toolsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button
+                    className="h-8 gap-1.5 rounded-lg px-3 text-muted-foreground text-xs hover:text-foreground"
+                    size="sm"
                     type="button"
                     variant="ghost"
-                    size="sm"
-                    className="h-8 gap-1.5 rounded-lg px-3 text-xs text-muted-foreground hover:text-foreground"
                   >
                     <Wrench className="h-3.5 w-3.5" />
                     Tools
                     {enabledToolsCount > 0 && (
-                      <span className="ml-1 rounded-full bg-primary/20 px-1.5 text-[10px] font-medium text-primary">
+                      <span className="ml-1 rounded-full bg-primary/20 px-1.5 font-medium text-[10px] text-primary">
                         {enabledToolsCount}
                       </span>
                     )}
@@ -546,29 +535,25 @@ export default function Chat() {
                     </DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
-                    <p className="text-sm text-muted-foreground">
-                      Enable tools to give the AI access to your data. Only
-                      available in Agentic mode.
+                    <p className="text-muted-foreground text-sm">
+                      Enable tools to give the AI access to your data. Only available in Agentic
+                      mode.
                     </p>
                     <div className="space-y-3">
                       {tools.map((tool) => {
                         const Icon = tool.icon;
                         return (
                           <div
-                            key={tool.id}
                             className="flex items-center justify-between rounded-lg border p-3"
+                            key={tool.id}
                           >
                             <div className="flex items-center gap-3">
                               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
                                 <Icon className="h-4 w-4" />
                               </div>
                               <div>
-                                <p className="text-sm font-medium">
-                                  {tool.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {tool.description}
-                                </p>
+                                <p className="font-medium text-sm">{tool.name}</p>
+                                <p className="text-muted-foreground text-xs">{tool.description}</p>
                               </div>
                             </div>
                             <Switch

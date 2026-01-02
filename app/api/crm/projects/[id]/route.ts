@@ -2,19 +2,13 @@ import { NextResponse } from "next/server";
 import { projectEvents } from "@/lib/events";
 import prisma from "@/lib/prisma";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
     if (Number.isNaN(projectId)) {
-      return NextResponse.json(
-        { error: "Invalid project ID" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid project ID" }, { status: 400 });
     }
 
     const project = await prisma.project.findUnique({
@@ -27,48 +21,28 @@ export async function GET(
 
     return NextResponse.json({ project });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch project" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch project" }, { status: 500 });
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
     if (Number.isNaN(projectId)) {
-      return NextResponse.json(
-        { error: "Invalid project ID" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid project ID" }, { status: 400 });
     }
 
     const body = await request.json();
-    const {
-      name,
-      description,
-      status,
-      priority,
-      progress,
-      startDate,
-      endDate,
-    } = body;
+    const { name, description, status, priority, progress, startDate, endDate } = body;
 
     // Build update data
     const updateData: Record<string, unknown> = {};
 
     if (name !== undefined) {
       if (!name || name.trim() === "") {
-        return NextResponse.json(
-          { error: "Name cannot be empty" },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: "Name cannot be empty" }, { status: 400 });
       }
       updateData.name = name.trim();
     }
@@ -107,26 +81,17 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to update project" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to update project" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
     if (Number.isNaN(projectId)) {
-      return NextResponse.json(
-        { error: "Invalid project ID" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid project ID" }, { status: 400 });
     }
 
     const project = await prisma.project.delete({
@@ -138,9 +103,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to delete project" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to delete project" }, { status: 500 });
   }
 }

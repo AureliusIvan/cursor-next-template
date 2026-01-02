@@ -94,7 +94,7 @@ export async function fetchWebContent(url: string): Promise<string | null> {
  */
 export async function fetchMultipleContents(
   urls: string[],
-  maxConcurrent = 3,
+  maxConcurrent = 3
 ): Promise<Array<{ url: string; content: string }>> {
   if (urls.length === 0) {
     return [];
@@ -102,7 +102,7 @@ export async function fetchMultipleContents(
 
   debug(
     { module: "ContentFetcher" },
-    `Fetching ${urls.length} URLs in parallel (max ${maxConcurrent})`,
+    `Fetching ${urls.length} URLs in parallel (max ${maxConcurrent})`
   );
 
   // Limit concurrent requests
@@ -113,18 +113,18 @@ export async function fetchMultipleContents(
     limitedUrls.map(async (url) => {
       const content = await fetchWebContent(url);
       return { url, content };
-    }),
+    })
   );
 
   // Filter successful results with content
   const successful = results
     .filter(
       (
-        result,
+        result
       ): result is PromiseFulfilledResult<{
         url: string;
         content: string | null;
-      }> => result.status === "fulfilled" && result.value.content !== null,
+      }> => result.status === "fulfilled" && result.value.content !== null
     )
     .map((result) => ({
       url: result.value.url,
@@ -133,7 +133,7 @@ export async function fetchMultipleContents(
 
   debug(
     { module: "ContentFetcher" },
-    `Successfully fetched ${successful.length}/${urls.length} URLs`,
+    `Successfully fetched ${successful.length}/${urls.length} URLs`
   );
 
   return successful;

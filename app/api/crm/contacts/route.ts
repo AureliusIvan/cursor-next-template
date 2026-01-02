@@ -9,10 +9,7 @@ export async function GET(request: Request) {
     const searchQuery = searchParams.get("search")?.trim();
 
     if (!searchQuery) {
-      return NextResponse.json(
-        { error: "Search query is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Search query is required" }, { status: 400 });
     }
 
     const contacts = await prisma.contact.findMany({
@@ -31,10 +28,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ contacts });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to search contacts" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to search contacts" }, { status: 500 });
   }
 }
 
@@ -67,9 +61,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, contact });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to create contact" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create contact" }, { status: 500 });
   }
 }

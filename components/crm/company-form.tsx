@@ -55,9 +55,7 @@ export function CompanyForm() {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -66,11 +64,7 @@ export function CompanyForm() {
 
   if (!isOpen) {
     return (
-      <Button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="rounded-2xl"
-      >
+      <Button className="rounded-2xl" onClick={() => setIsOpen(true)} type="button">
         <Plus className="mr-2 h-4 w-4" />
         Add Company
       </Button>
@@ -78,114 +72,108 @@ export function CompanyForm() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-3xl border p-8 w-full max-w-md shadow-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-semibold mb-6 pb-4 border-b">
-          Add New Company
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border bg-background p-8 shadow-lg">
+        <h2 className="mb-6 border-b pb-4 font-semibold text-2xl">Add New Company</h2>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="name">
               Name <span className="text-destructive">*</span>
             </Label>
             <Input
-              type="text"
+              className="rounded-xl"
               id="name"
               name="name"
-              required
-              value={formData.name}
               onChange={handleChange}
-              className="rounded-xl"
+              required
+              type="text"
+              value={formData.name}
             />
           </div>
 
           <div>
             <Label htmlFor="website">Website</Label>
             <Input
-              type="url"
+              className="rounded-xl"
               id="website"
               name="website"
-              value={formData.website}
               onChange={handleChange}
-              className="rounded-xl"
+              type="url"
+              value={formData.website}
             />
           </div>
 
           <div>
             <Label htmlFor="industry">Industry</Label>
             <Input
-              type="text"
+              className="rounded-xl"
               id="industry"
               name="industry"
-              value={formData.industry}
               onChange={handleChange}
-              className="rounded-xl"
+              type="text"
+              value={formData.industry}
             />
           </div>
 
           <div>
             <Label htmlFor="description">Description</Label>
             <Textarea
+              className="rounded-xl"
               id="description"
               name="description"
-              value={formData.description}
               onChange={handleChange}
-              className="rounded-xl"
               rows={3}
+              value={formData.description}
             />
           </div>
 
           <div>
             <Label htmlFor="phone">Phone</Label>
             <Input
-              type="tel"
+              className="rounded-xl"
               id="phone"
               name="phone"
-              value={formData.phone}
               onChange={handleChange}
-              className="rounded-xl"
+              type="tel"
+              value={formData.phone}
             />
           </div>
 
           <div>
             <Label htmlFor="address">Address</Label>
             <Input
-              type="text"
+              className="rounded-xl"
               id="address"
               name="address"
-              value={formData.address}
               onChange={handleChange}
-              className="rounded-xl"
+              type="text"
+              value={formData.address}
             />
           </div>
 
           <div>
             <Label htmlFor="size">Size</Label>
             <Input
-              type="text"
+              className="rounded-xl"
               id="size"
               name="size"
-              value={formData.size}
               onChange={handleChange}
               placeholder="e.g., 1-10, 11-50, 51-200"
-              className="rounded-xl"
+              type="text"
+              value={formData.size}
             />
           </div>
 
-          <div className="flex gap-3 justify-end pt-6 border-t mt-6">
+          <div className="mt-6 flex justify-end gap-3 border-t pt-6">
             <Button
+              className="rounded-2xl"
+              onClick={() => setIsOpen(false)}
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
-              className="rounded-2xl"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-2xl"
-            >
+            <Button className="rounded-2xl" disabled={isSubmitting} type="submit">
               {isSubmitting ? "Creating..." : "Create Company"}
             </Button>
           </div>

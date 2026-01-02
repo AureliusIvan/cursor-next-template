@@ -1,13 +1,4 @@
-import {
-  ArrowLeft,
-  Building2,
-  Calendar,
-  Clock,
-  Globe,
-  MapPin,
-  Phone,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, Building2, Calendar, Clock, Globe, MapPin, Phone, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -35,13 +26,9 @@ function CompanyField({
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">
-          {label}
-        </div>
-        <div className="text-sm font-medium break-words">
-          {value || "Not provided"}
-        </div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 font-medium text-muted-foreground text-xs">{label}</div>
+        <div className="break-words font-medium text-sm">{value || "Not provided"}</div>
       </div>
     </div>
   );
@@ -61,21 +48,17 @@ function MetadataField({
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">
-          {label}
-        </div>
-        <div className="text-sm font-medium">{value}</div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 font-medium text-muted-foreground text-xs">{label}</div>
+        <div className="font-medium text-sm">{value}</div>
       </div>
     </div>
   );
 }
 
-export default async function CompanyDetailPage({
-  params,
-}: CompanyDetailPageProps) {
+export default async function CompanyDetailPage({ params }: CompanyDetailPageProps) {
   const { id } = await params;
-  const companyId = parseInt(id, 10);
+  const companyId = Number.parseInt(id, 10);
 
   if (Number.isNaN(companyId)) {
     notFound();
@@ -96,17 +79,15 @@ export default async function CompanyDetailPage({
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/dashboard/crm/contacts/companies">
-              <Button variant="outline" size="icon" className="rounded-xl">
+              <Button className="rounded-xl" size="icon" variant="outline">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">
-                {company.name}
-              </h1>
+              <h1 className="font-semibold text-3xl tracking-tight">{company.name}</h1>
             </div>
           </div>
-          <Button variant="outline" className="rounded-xl">
+          <Button className="rounded-xl" variant="outline">
             Edit
           </Button>
         </div>
@@ -117,22 +98,10 @@ export default async function CompanyDetailPage({
             <CardTitle>Company Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <CompanyField
-              icon={Building2}
-              label="Industry"
-              value={company.industry}
-            />
-            <CompanyField
-              icon={Globe}
-              label="Website"
-              value={company.website}
-            />
+            <CompanyField icon={Building2} label="Industry" value={company.industry} />
+            <CompanyField icon={Globe} label="Website" value={company.website} />
             <CompanyField icon={Phone} label="Phone" value={company.phone} />
-            <CompanyField
-              icon={MapPin}
-              label="Address"
-              value={company.address}
-            />
+            <CompanyField icon={MapPin} label="Address" value={company.address} />
             <CompanyField icon={Users} label="Size" value={company.size} />
           </CardContent>
         </Card>
@@ -144,9 +113,7 @@ export default async function CompanyDetailPage({
               <CardTitle>Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm whitespace-pre-wrap">
-                {company.description}
-              </p>
+              <p className="whitespace-pre-wrap text-sm">{company.description}</p>
             </CardContent>
           </Card>
         )}

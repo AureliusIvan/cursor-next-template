@@ -23,28 +23,26 @@ export function HomeContent() {
       {/* Hero Section */}
       <section>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           className="overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 p-8 text-white"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
         >
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-4">
-              <Badge className="rounded-xl bg-white/20 text-white hover:bg-white/30">
-                Premium
-              </Badge>
-              <h2 className="text-3xl font-bold">Welcome to Dalim UI Blocks</h2>
+              <Badge className="rounded-xl bg-white/20 text-white hover:bg-white/30">Premium</Badge>
+              <h2 className="font-bold text-3xl">Welcome to Dalim UI Blocks</h2>
               <p className="max-w-[600px] text-white/80">
-                Unleash your creativity with our comprehensive suite of
-                professional design tools and resources.
+                Unleash your creativity with our comprehensive suite of professional design tools
+                and resources.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button className="rounded-2xl bg-white text-indigo-700 hover:bg-white/90">
                   Explore Plans
                 </Button>
                 <Button
-                  variant="outline"
                   className="rounded-2xl border-white bg-transparent text-white hover:bg-white/10"
+                  variant="outline"
                 >
                   Take a Tour
                 </Button>
@@ -53,12 +51,12 @@ export function HomeContent() {
             <div className="hidden lg:block">
               <motion.div
                 animate={{ rotate: 360 }}
+                className="relative h-40 w-40"
                 transition={{
                   duration: 50,
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "linear",
                 }}
-                className="relative h-40 w-40"
               >
                 <div className="absolute inset-0 rounded-full bg-white/10 backdrop-blur-md" />
                 <div className="absolute inset-4 rounded-full bg-white/20" />
@@ -74,8 +72,8 @@ export function HomeContent() {
       {/* Recent Apps */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Recent Apps</h2>
-          <Button variant="ghost" className="rounded-2xl">
+          <h2 className="font-semibold text-2xl">Recent Apps</h2>
+          <Button className="rounded-2xl" variant="ghost">
             View All
           </Button>
         </div>
@@ -88,17 +86,13 @@ export function HomeContent() {
                 whileHover={{ scale: 1.02, y: -5 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Card className="hover:border-primary/50 overflow-hidden rounded-3xl transition-all duration-300">
+                <Card className="overflow-hidden rounded-3xl transition-all duration-300 hover:border-primary/50">
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
-                      <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-2xl">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
                         {app.icon}
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-2xl"
-                      >
+                      <Button className="h-8 w-8 rounded-2xl" size="icon" variant="ghost">
                         <Star className="h-4 w-4" />
                       </Button>
                     </div>
@@ -108,7 +102,7 @@ export function HomeContent() {
                     <CardDescription>{app.description}</CardDescription>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="secondary" className="w-full rounded-2xl">
+                    <Button className="w-full rounded-2xl" variant="secondary">
                       Open
                     </Button>
                   </CardFooter>
@@ -122,8 +116,8 @@ export function HomeContent() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Recent Files</h2>
-            <Button variant="ghost" className="rounded-2xl">
+            <h2 className="font-semibold text-2xl">Recent Files</h2>
+            <Button className="rounded-2xl" variant="ghost">
               View All
             </Button>
           </div>
@@ -131,12 +125,12 @@ export function HomeContent() {
             <div className="grid grid-cols-1 divide-y">
               {recentFiles.slice(0, 3).map((file) => (
                 <motion.div
+                  className="flex items-center justify-between p-4"
                   key={file.name}
                   whileHover={{ backgroundColor: "rgba(0,0,0,0.02)" }}
-                  className="flex items-center justify-between p-4"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-2xl">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-muted">
                       {file.icon}
                     </div>
                     <div>
@@ -148,12 +142,12 @@ export function HomeContent() {
                   </div>
                   <div className="flex items-center gap-2">
                     {file.shared && (
-                      <Badge variant="outline" className="rounded-xl">
+                      <Badge className="rounded-xl" variant="outline">
                         <Users className="mr-1 h-3 w-3" />
                         {file.collaborators}
                       </Badge>
                     )}
-                    <Button variant="ghost" size="sm" className="rounded-xl">
+                    <Button className="rounded-xl" size="sm" variant="ghost">
                       Open
                     </Button>
                   </div>
@@ -165,8 +159,8 @@ export function HomeContent() {
 
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Active Projects</h2>
-            <Button variant="ghost" className="rounded-2xl">
+            <h2 className="font-semibold text-2xl">Active Projects</h2>
+            <Button className="rounded-2xl" variant="ghost">
               View All
             </Button>
           </div>
@@ -174,30 +168,25 @@ export function HomeContent() {
             <div className="grid grid-cols-1 divide-y">
               {projects.slice(0, 3).map((project) => (
                 <motion.div
+                  className="p-4"
                   key={project.name}
                   whileHover={{ backgroundColor: "rgba(0,0,0,0.02)" }}
-                  className="p-4"
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-medium">{project.name}</h3>
-                    <Badge variant="outline" className="rounded-xl">
+                    <Badge className="rounded-xl" variant="outline">
                       Due {project.dueDate}
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground mb-3 text-sm">
-                    {project.description}
-                  </p>
+                  <p className="mb-3 text-muted-foreground text-sm">{project.description}</p>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span>Progress</span>
                       <span>{project.progress}%</span>
                     </div>
-                    <Progress
-                      value={project.progress}
-                      className="h-2 rounded-xl"
-                    />
+                    <Progress className="h-2 rounded-xl" value={project.progress} />
                   </div>
-                  <div className="text-muted-foreground mt-3 flex items-center justify-between text-sm">
+                  <div className="mt-3 flex items-center justify-between text-muted-foreground text-sm">
                     <div className="flex items-center">
                       <Users className="mr-1 h-4 w-4" />
                       {project.members} members
@@ -217,8 +206,8 @@ export function HomeContent() {
       {/* Community Highlights */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Community Highlights</h2>
-          <Button variant="ghost" className="rounded-2xl">
+          <h2 className="font-semibold text-2xl">Community Highlights</h2>
+          <Button className="rounded-2xl" variant="ghost">
             Explore
           </Button>
         </div>
@@ -230,18 +219,16 @@ export function HomeContent() {
               whileTap={{ scale: 0.98 }}
             >
               <Card className="overflow-hidden rounded-3xl">
-                <div className="bg-muted aspect-[4/3] overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img
-                    src={post.image || "/placeholder.svg"}
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    src={post.image || "/placeholder.svg"}
                   />
                 </div>
                 <CardContent className="p-4">
                   <h3 className="font-semibold">{post.title}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    by {post.author}
-                  </p>
+                  <p className="text-muted-foreground text-sm">by {post.author}</p>
                   <div className="mt-2 flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
                       <Heart className="h-4 w-4 text-red-500" />

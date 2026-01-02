@@ -24,18 +24,12 @@ export function extractUrlsFromMessages(messages: any[]): string[] {
 /**
  * Fetch web content for detected URLs (in parallel)
  */
-export async function fetchWebContentsForUrls(
-  urls: string[],
-  maxUrls = 3,
-): Promise<WebContent[]> {
+export async function fetchWebContentsForUrls(urls: string[], maxUrls = 3): Promise<WebContent[]> {
   if (urls.length === 0) {
     return [];
   }
 
-  debug(
-    { module: "WebEnhancer" },
-    `Found ${urls.length} URLs, fetching up to ${maxUrls}`,
-  );
+  debug({ module: "WebEnhancer" }, `Found ${urls.length} URLs, fetching up to ${maxUrls}`);
 
   // Fetch content in parallel
   return fetchMultipleContents(urls, maxUrls);
@@ -46,7 +40,7 @@ export async function fetchWebContentsForUrls(
  */
 export function formatWebContentContext(
   webContents: WebContent[],
-  maxContentLength = 8000,
+  maxContentLength = 8000
 ): string {
   if (webContents.length === 0) {
     return "";
@@ -55,7 +49,7 @@ export function formatWebContentContext(
   const formattedContent = webContents
     .map(
       ({ url, content }) =>
-        `URL: ${url}\nContent:\n${content.substring(0, maxContentLength)}\n---\n`,
+        `URL: ${url}\nContent:\n${content.substring(0, maxContentLength)}\n---\n`
     )
     .join("\n");
 
@@ -71,7 +65,7 @@ export async function enhanceMessagesWithWebContent(
   options: {
     maxUrls?: number;
     maxContentLength?: number;
-  } = {},
+  } = {}
 ): Promise<any[]> {
   const { maxUrls = 3, maxContentLength = 8000 } = options;
 
@@ -103,10 +97,7 @@ export async function enhanceMessagesWithWebContent(
     content: `${lastMessage.content}\n\n${contextMessage}`,
   };
 
-  debug(
-    { module: "WebEnhancer" },
-    `Enhanced message with ${webContents.length} web contents`,
-  );
+  debug({ module: "WebEnhancer" }, `Enhanced message with ${webContents.length} web contents`);
 
   return enhancedMessages;
 }

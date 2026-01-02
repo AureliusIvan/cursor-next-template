@@ -17,11 +17,7 @@ type DebugContext = {
  * @param message - Debug message
  * @param ...args - Additional data to log
  */
-export function debug(
-  context: DebugContext | string,
-  message?: string,
-  ...args: unknown[]
-): void {
+export function debug(context: DebugContext | string, message?: string, ...args: unknown[]): void {
   if (!isDev()) return;
 
   if (typeof context === "string") {
@@ -135,9 +131,7 @@ export function debugTable(data: unknown, context?: DebugContext): void {
   if (!isDev()) return;
 
   const prefix = context
-    ? `[Debug Table] ${[context.component, context.function]
-        .filter(Boolean)
-        .join("::")}`
+    ? `[Debug Table] ${[context.component, context.function].filter(Boolean).join("::")}`
     : "[Debug Table]";
   console.log(prefix);
   console.table(data);
@@ -149,9 +143,7 @@ export function debugTable(data: unknown, context?: DebugContext): void {
  * Silently handles failures to avoid breaking error handling flow
  * @param errorData - Error data object to log
  */
-export async function logErrorPersistently(
-  errorData: Record<string, unknown>,
-): Promise<void> {
+export async function logErrorPersistently(errorData: Record<string, unknown>): Promise<void> {
   if (!isDev()) return;
   if (typeof window === "undefined") return; // Only works client-side
 

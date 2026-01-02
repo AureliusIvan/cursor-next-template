@@ -7,8 +7,7 @@
  * Supports: https://, http://, www., and domain patterns
  */
 export function extractUrls(text: string): string[] {
-  const urlRegex =
-    /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g;
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g;
   const matches = text.match(urlRegex);
 
   if (!matches) {
@@ -16,9 +15,7 @@ export function extractUrls(text: string): string[] {
   }
 
   // Normalize URLs and deduplicate
-  const normalized = matches.map((url) =>
-    url.startsWith("http") ? url : `https://${url}`,
-  );
+  const normalized = matches.map((url) => (url.startsWith("http") ? url : `https://${url}`));
 
   return [...new Set(normalized)];
 }

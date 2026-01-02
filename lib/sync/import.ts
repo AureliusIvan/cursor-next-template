@@ -58,11 +58,10 @@ export async function syncContactsFromNotion() {
   });
 
   const lastSyncTime = syncState?.lastSyncTime?.toISOString();
-  debug(
-    { component: "Sync", function: "syncContactsFromNotion" },
-    "Starting sync",
-    { lastSyncTime, databaseId },
-  );
+  debug({ component: "Sync", function: "syncContactsFromNotion" }, "Starting sync", {
+    lastSyncTime,
+    databaseId,
+  });
 
   let hasMore = true;
   let cursor: string | undefined;
@@ -75,7 +74,7 @@ export async function syncContactsFromNotion() {
     debug(
       { component: "Sync", function: "syncContactsFromNotion" },
       "Retrieving database to get data source ID",
-      { databaseId },
+      { databaseId }
     );
 
     const database = await notion.databases.retrieve({
@@ -87,19 +86,15 @@ export async function syncContactsFromNotion() {
       throw new Error(
         "Database does not have an associated data source. " +
           "This may be due to an older Notion API version. Database ID: " +
-          databaseId,
+          databaseId
       );
     }
 
-    debug(
-      { component: "Sync", function: "syncContactsFromNotion" },
-      "Found data source ID",
-      {
-        databaseId,
-        dataSourceId,
-        databaseTitle: (database as any).title?.[0]?.plain_text,
-      },
-    );
+    debug({ component: "Sync", function: "syncContactsFromNotion" }, "Found data source ID", {
+      databaseId,
+      dataSourceId,
+      databaseTitle: (database as any).title?.[0]?.plain_text,
+    });
 
     while (hasMore) {
       // 2. Query Notion using dataSources.query with the correct data source ID
@@ -127,9 +122,7 @@ export async function syncContactsFromNotion() {
         // Extract fields safely
         // Adjust these property names based on your actual Notion DB schema
         const name =
-          props.Name?.title?.[0]?.plain_text ||
-          props.Title?.title?.[0]?.plain_text ||
-          "Untitled";
+          props.Name?.title?.[0]?.plain_text || props.Title?.title?.[0]?.plain_text || "Untitled";
 
         const email = props.Email?.email || null;
         const phone = props.Phone?.phone_number || null;
@@ -186,11 +179,9 @@ export async function syncContactsFromNotion() {
       },
     });
 
-    debug(
-      { component: "Sync", function: "syncContactsFromNotion" },
-      "Sync completed",
-      { processedCount },
-    );
+    debug({ component: "Sync", function: "syncContactsFromNotion" }, "Sync completed", {
+      processedCount,
+    });
     return { success: true, count: processedCount };
   } catch (error) {
     const errorMessage = extractErrorMessage(error);
@@ -201,7 +192,7 @@ export async function syncContactsFromNotion() {
       {
         lastSyncTime,
         ...errorDetails,
-      },
+      }
     );
     // Provide additional context for common errors
     if (errorDetails.code === "object_not_found") {
@@ -211,18 +202,14 @@ export async function syncContactsFromNotion() {
         details: {
           ...errorDetails,
           troubleshooting: {
-            step1:
-              "Verify your NOTION_DATABASE_ID in .env matches the database ID from Notion",
+            step1: "Verify your NOTION_DATABASE_ID in .env matches the database ID from Notion",
             step2:
               "Open the database in Notion → Click '...' → 'Copy link' → Extract the ID from the URL",
             step3:
               "Share the database with your integration: Click '...' → 'Add connections' → Select your integration",
-            step4:
-              "Ensure your integration has 'Read' permissions for the database",
-            exampleUrl:
-              "https://notion.so/workspace/2d393eb1e6d18094b716d2fc817db224",
-            exampleId:
-              "2d393eb1-e6d1-8094-b716-d2fc817db224 or 2d393eb1e6d18094b716d2fc817db224",
+            step4: "Ensure your integration has 'Read' permissions for the database",
+            exampleUrl: "https://notion.so/workspace/2d393eb1e6d18094b716d2fc817db224",
+            exampleId: "2d393eb1-e6d1-8094-b716-d2fc817db224 or 2d393eb1e6d18094b716d2fc817db224",
           },
         },
       };

@@ -15,14 +15,8 @@ export const searchContacts = tool({
   description:
     "Search for contacts in the CRM database by name, email, company, or role. Returns matching contacts.",
   inputSchema: z.object({
-    query: z
-      .string()
-      .describe("Search term to match against name, email, company, or role"),
-    limit: z
-      .number()
-      .optional()
-      .default(10)
-      .describe("Maximum number of results to return"),
+    query: z.string().describe("Search term to match against name, email, company, or role"),
+    limit: z.number().optional().default(10).describe("Maximum number of results to return"),
   }),
   execute: async ({ query, limit }: { query: string; limit: number }) => {
     try {
@@ -55,8 +49,7 @@ export const searchContacts = tool({
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Failed to search contacts",
+        error: error instanceof Error ? error.message : "Failed to search contacts",
       };
     }
   },
@@ -111,16 +104,8 @@ export const getContact = tool({
 export const listContacts = tool({
   description: "List all contacts in the CRM database with optional pagination",
   inputSchema: z.object({
-    limit: z
-      .number()
-      .optional()
-      .default(20)
-      .describe("Maximum number of contacts to return"),
-    offset: z
-      .number()
-      .optional()
-      .default(0)
-      .describe("Number of contacts to skip for pagination"),
+    limit: z.number().optional().default(20).describe("Maximum number of contacts to return"),
+    offset: z.number().optional().default(0).describe("Number of contacts to skip for pagination"),
   }),
   execute: async ({ limit, offset }: { limit: number; offset: number }) => {
     try {
@@ -149,8 +134,7 @@ export const listContacts = tool({
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Failed to list contacts",
+        error: error instanceof Error ? error.message : "Failed to list contacts",
       };
     }
   },
@@ -167,9 +151,7 @@ export const queryNotionDatabase = tool({
       .object({
         property: z
           .string()
-          .describe(
-            "The Notion property name to filter by (e.g., 'Name', 'Email', 'Company')",
-          ),
+          .describe("The Notion property name to filter by (e.g., 'Name', 'Email', 'Company')"),
         type: z
           .enum(["title", "rich_text", "email", "phone_number"])
           .describe("The Notion property type"),
@@ -177,11 +159,7 @@ export const queryNotionDatabase = tool({
       })
       .optional()
       .describe("Optional filter for the query"),
-    pageSize: z
-      .number()
-      .optional()
-      .default(10)
-      .describe("Number of results per page"),
+    pageSize: z.number().optional().default(10).describe("Number of results per page"),
   }),
   execute: async ({
     filter,
@@ -218,9 +196,7 @@ export const queryNotionDatabase = tool({
         queryFilter = {
           property,
           [type]:
-            type === "title" || type === "rich_text"
-              ? { contains: value }
-              : { equals: value },
+            type === "title" || type === "rich_text" ? { contains: value } : { equals: value },
         };
       }
 
@@ -230,24 +206,20 @@ export const queryNotionDatabase = tool({
         filter: queryFilter,
       });
 
-      const results: NotionContactResult[] = response.results.map(
-        (page: any) => {
-          const props = page.properties || {};
-          return {
-            id: page.id,
-            name:
-              props.Name?.title?.[0]?.plain_text ||
-              props.Title?.title?.[0]?.plain_text ||
-              "Untitled",
-            email: props.Email?.email || null,
-            phone: props.Phone?.phone_number || null,
-            company: props.Company?.rich_text?.[0]?.plain_text || null,
-            role: props.Role?.rich_text?.[0]?.plain_text || null,
-            url: page.url,
-            lastEdited: page.last_edited_time,
-          };
-        },
-      );
+      const results: NotionContactResult[] = response.results.map((page: any) => {
+        const props = page.properties || {};
+        return {
+          id: page.id,
+          name:
+            props.Name?.title?.[0]?.plain_text || props.Title?.title?.[0]?.plain_text || "Untitled",
+          email: props.Email?.email || null,
+          phone: props.Phone?.phone_number || null,
+          company: props.Company?.rich_text?.[0]?.plain_text || null,
+          role: props.Role?.rich_text?.[0]?.plain_text || null,
+          url: page.url,
+          lastEdited: page.last_edited_time,
+        };
+      });
 
       return {
         success: true,
@@ -258,10 +230,7 @@ export const queryNotionDatabase = tool({
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to query Notion database",
+        error: error instanceof Error ? error.message : "Failed to query Notion database",
       };
     }
   },

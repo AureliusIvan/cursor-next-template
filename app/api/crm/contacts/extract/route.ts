@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     if (!imageUrl || typeof imageUrl !== "string") {
       return NextResponse.json(
         { error: "imageUrl is required and must be a string" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -27,12 +27,9 @@ export async function POST(request: Request) {
     console.error("Contact extraction error:", error);
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to extract contact information",
+        error: error instanceof Error ? error.message : "Failed to extract contact information",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

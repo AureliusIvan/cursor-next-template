@@ -46,60 +46,52 @@ function LoginForm() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-md flex-col gap-6 rounded-lg border border-black/8 bg-white p-8 dark:border-white/[.145] dark:bg-[#1a1a1a]">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold text-black dark:text-zinc-50">
-            Sign In
-          </h1>
+          <h1 className="font-semibold text-2xl text-black dark:text-zinc-50">Sign In</h1>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Enter your credentials to access your account
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-black dark:text-zinc-50"
-            >
+            <label className="font-medium text-black text-sm dark:text-zinc-50" htmlFor="email">
               Email
             </label>
             <input
+              className="h-12 rounded-lg border border-black/8 bg-white px-4 text-black placeholder:text-zinc-400 focus:border-black/20 focus:outline-none dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:focus:border-white/30"
+              disabled={isLoading}
               id="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="h-12 rounded-lg border border-black/8 bg-white px-4 text-black placeholder:text-zinc-400 focus:border-black/20 focus:outline-none dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:focus:border-white/30"
-              placeholder="you@example.com"
-              disabled={isLoading}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-black dark:text-zinc-50"
-            >
+            <label className="font-medium text-black text-sm dark:text-zinc-50" htmlFor="password">
               Password
             </label>
             <input
+              className="h-12 rounded-lg border border-black/8 bg-white px-4 text-black placeholder:text-zinc-400 focus:border-black/20 focus:outline-none dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:focus:border-white/30"
+              disabled={isLoading}
               id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="h-12 rounded-lg border border-black/8 bg-white px-4 text-black placeholder:text-zinc-400 focus:border-black/20 focus:outline-none dark:border-white/[.145] dark:bg-[#1a1a1a] dark:text-zinc-50 dark:focus:border-white/30"
-              placeholder="••••••••"
-              disabled={isLoading}
             />
           </div>
           {error && (
-            <div className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+            <div className="rounded-lg bg-red-50 px-4 py-2 text-red-600 text-sm dark:bg-red-900/20 dark:text-red-400">
               {error}
             </div>
           )}
           <button
-            type="submit"
-            disabled={isLoading}
             className="flex h-12 w-full items-center justify-center rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-[#ccc]"
+            disabled={isLoading}
+            type="submit"
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </button>
@@ -107,10 +99,7 @@ function LoginForm() {
 
         <div className="text-center text-sm text-zinc-600 dark:text-zinc-400">
           Don't have an account?{" "}
-          <a
-            href="/signup"
-            className="font-medium text-black hover:underline dark:text-zinc-50"
-          >
+          <a className="font-medium text-black hover:underline dark:text-zinc-50" href="/signup">
             Sign up
           </a>
         </div>

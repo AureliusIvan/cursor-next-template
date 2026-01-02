@@ -16,10 +16,7 @@ export default async function CompaniesPage() {
 
   return (
     <main className="flex-1 p-4 md:p-6">
-      <CompaniesPageClient
-        initialCompanies={companies}
-        lastSyncedAt={lastSync?.lastSyncTime}
-      />
+      <CompaniesPageClient initialCompanies={companies} lastSyncedAt={lastSync?.lastSyncTime} />
     </main>
   );
 }

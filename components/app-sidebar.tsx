@@ -4,11 +4,7 @@ import { ChevronDown, Search, Settings } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import {
   Sidebar,
@@ -29,9 +25,7 @@ import { cn } from "@/lib/utils";
 import { sidebarItems } from "./data";
 
 export function AppSidebar() {
-  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => ({
@@ -55,11 +49,11 @@ export function AppSidebar() {
 
         <div className="px-2">
           <div className="relative">
-            <Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+            <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
             <Input
-              type="search"
+              className="w-full rounded-2xl bg-muted py-2 pr-4 pl-9"
               placeholder="Search..."
-              className="bg-muted w-full rounded-2xl py-2 pr-4 pl-9"
+              type="search"
             />
           </div>
         </div>
@@ -73,14 +67,14 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   {item.items ? (
                     <Collapsible
-                      open={expandedItems[item.title]}
                       onOpenChange={() => toggleExpanded(item.title)}
+                      open={expandedItems[item.title]}
                     >
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
                           className={cn(
                             "w-full justify-between rounded-2xl",
-                            item.isActive && "bg-primary/10 text-primary",
+                            item.isActive && "bg-primary/10 text-primary"
                           )}
                         >
                           <div className="flex items-center gap-3">
@@ -89,17 +83,14 @@ export function AppSidebar() {
                           </div>
                           <div className="flex items-center gap-2">
                             {item.badge && (
-                              <Badge
-                                variant="outline"
-                                className="rounded-full px-2 py-0.5 text-xs"
-                              >
+                              <Badge className="rounded-full px-2 py-0.5 text-xs" variant="outline">
                                 {item.badge}
                               </Badge>
                             )}
                             <ChevronDown
                               className={cn(
                                 "h-4 w-4 transition-transform",
-                                expandedItems[item.title] ? "rotate-180" : "",
+                                expandedItems[item.title] ? "rotate-180" : ""
                               )}
                             />
                           </div>
@@ -109,19 +100,13 @@ export function AppSidebar() {
                         <SidebarMenuSub>
                           {item.items.map((subItem) => (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                className="rounded-2xl"
-                              >
-                                <a
-                                  href={subItem.url}
-                                  className="flex items-center justify-between"
-                                >
+                              <SidebarMenuSubButton asChild className="rounded-2xl">
+                                <a className="flex items-center justify-between" href={subItem.url}>
                                   {subItem.title}
                                   {subItem.badge && (
                                     <Badge
-                                      variant="outline"
                                       className="rounded-full px-2 py-0.5 text-xs"
+                                      variant="outline"
                                     >
                                       {subItem.badge}
                                     </Badge>
@@ -134,24 +119,14 @@ export function AppSidebar() {
                       </CollapsibleContent>
                     </Collapsible>
                   ) : (
-                    <SidebarMenuButton
-                      asChild
-                      isActive={item.isActive}
-                      className="rounded-2xl"
-                    >
-                      <a
-                        href={item.url || "#"}
-                        className="flex items-center justify-between"
-                      >
+                    <SidebarMenuButton asChild className="rounded-2xl" isActive={item.isActive}>
+                      <a className="flex items-center justify-between" href={item.url || "#"}>
                         <div className="flex items-center gap-3">
                           {item.icon}
                           <span>{item.title}</span>
                         </div>
                         {item.badge && (
-                          <Badge
-                            variant="outline"
-                            className="rounded-full px-2 py-0.5 text-xs"
-                          >
+                          <Badge className="rounded-full px-2 py-0.5 text-xs" variant="outline">
                             {item.badge}
                           </Badge>
                         )}
@@ -178,10 +153,7 @@ export function AppSidebar() {
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
-                      alt="User"
-                    />
+                    <AvatarImage alt="User" src="/placeholder.svg?height=32&width=32" />
                     <AvatarFallback>AI</AvatarFallback>
                   </Avatar>
                   <span>Ali Imam</span>

@@ -4,6 +4,45 @@
     "afterFileEdit": [
       {
         "command": ".cursor/hooks/lint.sh"
+      },
+      {
+        "command": ".cursor/hooks/prisma-generate.sh",
+        "matcher": "prisma/schema.prisma"
+      },
+      {
+        "command": ".cursor/hooks/type-check.sh",
+        "matcher": "**/*.{ts,tsx}"
+      },
+      {
+        "command": ".cursor/hooks/check-env.sh",
+        "matcher": ".env*"
+      },
+      {
+        "command": ".cursor/hooks/check-debug-usage.sh",
+        "matcher": "**/*.{ts,tsx,js,jsx}"
+      },
+      {
+        "command": ".cursor/hooks/validate-naming.sh",
+        "matcher": "**/*.{tsx,jsx}"
+      },
+      {
+        "command": ".cursor/hooks/validate-api-pattern.sh",
+        "matcher": "app/api/**/route.ts"
+      },
+      {
+        "command": ".cursor/hooks/validate-imports.sh",
+        "matcher": "**/*.{ts,tsx,js,jsx}"
+      },
+      {
+        "command": ".cursor/hooks/migration-reminder.sh",
+        "matcher": "prisma/schema.prisma"
+      },
+      {
+        "command": ".cursor/hooks/version.js",
+        "matcher": "package.json"
+      },
+      {
+        "command": "bun x ultracite fix"
       }
     ]
   }

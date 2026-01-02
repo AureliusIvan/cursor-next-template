@@ -3,7 +3,6 @@ import {
   BookOpen,
   Briefcase,
   Brush,
-  Building2,
   Code,
   CuboidIcon,
   FileText,
@@ -17,14 +16,7 @@ import {
   Video,
 } from "lucide-react";
 
-import type {
-  App,
-  CommunityPost,
-  Project,
-  RecentFile,
-  SidebarItem,
-  Tutorial,
-} from "./types";
+import type { App, CommunityPost, Project, RecentFile, SidebarItem, Tutorial } from "./types";
 
 export const apps: App[] = [
   {

@@ -12,17 +12,15 @@ import { CONTACT_EXTRACTION_PROMPT } from "../prompts";
  */
 const contactSchema = z.object({
   name: z.string().nullable(),
-  email: z
-    .union([z.string().email(), z.string(), z.null()])
-    .transform((val) => {
-      if (!val || typeof val !== "string") return null;
-      const trimmed = val.trim();
-      // Basic email validation
-      if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-        return trimmed;
-      }
-      return null;
-    }),
+  email: z.union([z.string().email(), z.string(), z.null()]).transform((val) => {
+    if (!val || typeof val !== "string") return null;
+    const trimmed = val.trim();
+    // Basic email validation
+    if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      return trimmed;
+    }
+    return null;
+  }),
   phone: z.string().nullable(),
   company: z.string().nullable(),
   role: z.string().nullable(),
@@ -33,9 +31,7 @@ export type ExtractedContact = z.infer<typeof contactSchema>;
 /**
  * Extract contact information from an image URL using Gemini vision
  */
-export async function extractContactFromImage(
-  imageUrl: string,
-): Promise<ExtractedContact> {
+export async function extractContactFromImage(imageUrl: string): Promise<ExtractedContact> {
   const model = google("gemini-3-flash-preview");
 
   try {
@@ -73,7 +69,7 @@ export async function extractContactFromImage(
     throw new Error(
       error instanceof Error
         ? `Failed to extract contact: ${error.message}`
-        : "Failed to extract contact from image",
+        : "Failed to extract contact from image"
     );
   }
 }

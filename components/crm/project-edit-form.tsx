@@ -29,12 +29,8 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
     status: project.status,
     priority: project.priority,
     progress: String(project.progress),
-    startDate: project.startDate
-      ? new Date(project.startDate).toISOString().split("T")[0]
-      : "",
-    endDate: project.endDate
-      ? new Date(project.endDate).toISOString().split("T")[0]
-      : "",
+    startDate: project.startDate ? new Date(project.startDate).toISOString().split("T")[0] : "",
+    endDate: project.endDate ? new Date(project.endDate).toISOString().split("T")[0] : "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,9 +62,7 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -78,10 +72,10 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
   if (!isOpen) {
     return (
       <Button
+        className="rounded-2xl"
+        onClick={() => setIsOpen(true)}
         type="button"
         variant="outline"
-        onClick={() => setIsOpen(true)}
-        className="rounded-2xl"
       >
         <Pencil className="mr-2 h-4 w-4" />
         Edit
@@ -90,36 +84,34 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-3xl border p-8 w-full max-w-md shadow-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-semibold mb-6 pb-4 border-b">
-          Edit Project
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border bg-background p-8 shadow-lg">
+        <h2 className="mb-6 border-b pb-4 font-semibold text-2xl">Edit Project</h2>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="edit-name">
               Name <span className="text-destructive">*</span>
             </Label>
             <Input
-              type="text"
+              className="rounded-xl"
               id="edit-name"
               name="name"
-              required
-              value={formData.name}
               onChange={handleChange}
-              className="rounded-xl"
+              required
+              type="text"
+              value={formData.name}
             />
           </div>
 
           <div>
             <Label htmlFor="edit-description">Description</Label>
             <Textarea
+              className="rounded-xl"
               id="edit-description"
               name="description"
-              value={formData.description}
               onChange={handleChange}
-              className="rounded-xl"
               rows={3}
+              value={formData.description}
             />
           </div>
 
@@ -127,10 +119,8 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
             <div>
               <Label htmlFor="edit-status">Status</Label>
               <Select
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}
                 value={formData.status}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, status: value }))
-                }
               >
                 <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select status" />
@@ -146,10 +136,8 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
             <div>
               <Label htmlFor="edit-priority">Priority</Label>
               <Select
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, priority: value }))}
                 value={formData.priority}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, priority: value }))
-                }
               >
                 <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select priority" />
@@ -167,14 +155,14 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
           <div>
             <Label htmlFor="edit-progress">Progress (%)</Label>
             <Input
-              type="number"
-              id="edit-progress"
-              name="progress"
-              min="0"
-              max="100"
-              value={formData.progress}
-              onChange={handleChange}
               className="rounded-xl"
+              id="edit-progress"
+              max="100"
+              min="0"
+              name="progress"
+              onChange={handleChange}
+              type="number"
+              value={formData.progress}
             />
           </div>
 
@@ -182,42 +170,38 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
             <div>
               <Label htmlFor="edit-startDate">Start Date</Label>
               <Input
-                type="date"
+                className="rounded-xl"
                 id="edit-startDate"
                 name="startDate"
-                value={formData.startDate}
                 onChange={handleChange}
-                className="rounded-xl"
+                type="date"
+                value={formData.startDate}
               />
             </div>
 
             <div>
               <Label htmlFor="edit-endDate">End Date</Label>
               <Input
-                type="date"
+                className="rounded-xl"
                 id="edit-endDate"
                 name="endDate"
-                value={formData.endDate}
                 onChange={handleChange}
-                className="rounded-xl"
+                type="date"
+                value={formData.endDate}
               />
             </div>
           </div>
 
-          <div className="flex gap-3 justify-end pt-6 border-t mt-6">
+          <div className="mt-6 flex justify-end gap-3 border-t pt-6">
             <Button
+              className="rounded-2xl"
+              onClick={() => setIsOpen(false)}
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
-              className="rounded-2xl"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-2xl"
-            >
+            <Button className="rounded-2xl" disabled={isSubmitting} type="submit">
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>

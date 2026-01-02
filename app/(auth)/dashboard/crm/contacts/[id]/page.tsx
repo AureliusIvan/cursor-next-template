@@ -35,13 +35,9 @@ function ContactField({
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">
-          {label}
-        </div>
-        <div className="text-sm font-medium break-words">
-          {value || "Not provided"}
-        </div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 font-medium text-muted-foreground text-xs">{label}</div>
+        <div className="break-words font-medium text-sm">{value || "Not provided"}</div>
       </div>
     </div>
   );
@@ -61,21 +57,17 @@ function MetadataField({
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">
-          {label}
-        </div>
-        <div className="text-sm font-medium">{value}</div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 font-medium text-muted-foreground text-xs">{label}</div>
+        <div className="font-medium text-sm">{value}</div>
       </div>
     </div>
   );
 }
 
-export default async function ContactDetailPage({
-  params,
-}: ContactDetailPageProps) {
+export default async function ContactDetailPage({ params }: ContactDetailPageProps) {
   const { id } = await params;
-  const contactId = parseInt(id, 10);
+  const contactId = Number.parseInt(id, 10);
 
   if (Number.isNaN(contactId)) {
     notFound();
@@ -96,17 +88,15 @@ export default async function ContactDetailPage({
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/dashboard/crm/contacts">
-              <Button variant="outline" size="icon" className="rounded-xl">
+              <Button className="rounded-xl" size="icon" variant="outline">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">
-                {contact.name}
-              </h1>
+              <h1 className="font-semibold text-3xl tracking-tight">{contact.name}</h1>
             </div>
           </div>
-          <Button variant="outline" className="rounded-xl">
+          <Button className="rounded-xl" variant="outline">
             Edit
           </Button>
         </div>
@@ -128,11 +118,7 @@ export default async function ContactDetailPage({
             <CardTitle>Work Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ContactField
-              icon={Building2}
-              label="Company"
-              value={contact.company}
-            />
+            <ContactField icon={Building2} label="Company" value={contact.company} />
             <ContactField icon={Briefcase} label="Role" value={contact.role} />
           </CardContent>
         </Card>
@@ -165,13 +151,9 @@ export default async function ContactDetailPage({
                 <div className="mt-0.5 rounded-lg bg-muted p-2">
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium text-muted-foreground mb-1">
-                    Notion ID
-                  </div>
-                  <div className="text-sm font-medium font-mono break-all">
-                    {contact.notionId}
-                  </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 font-medium text-muted-foreground text-xs">Notion ID</div>
+                  <div className="break-all font-medium font-mono text-sm">{contact.notionId}</div>
                 </div>
               </div>
             )}

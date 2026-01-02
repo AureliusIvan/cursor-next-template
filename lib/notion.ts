@@ -39,16 +39,14 @@ function validateNotionApiKey(): void {
   if (!process.env.NOTION_API_KEY) {
     throw new Error(
       "NOTION_API_KEY is not configured. Please set it in your .env file. " +
-        "Get your API key from https://www.notion.so/my-integrations",
+        "Get your API key from https://www.notion.so/my-integrations"
     );
   }
 
   // Basic format validation (Notion API keys typically start with 'secret_')
   const apiKey = process.env.NOTION_API_KEY.trim();
   if (apiKey.length === 0) {
-    throw new Error(
-      "NOTION_API_KEY is empty. Please set a valid API key in your .env file.",
-    );
+    throw new Error("NOTION_API_KEY is empty. Please set a valid API key in your .env file.");
   }
 }
 
@@ -61,11 +59,7 @@ function extractDatabaseUUID(databaseId: string): string {
 
   // FIRST: Check if it's already a valid UUID format (with or without hyphens)
   // This takes priority over URL extraction to avoid incorrect conversions
-  if (
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      cleaned,
-    )
-  ) {
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleaned)) {
     // Already has hyphens, return as-is
     return cleaned;
   }
@@ -85,8 +79,7 @@ function extractDatabaseUUID(databaseId: string): string {
 
   // THIRD: If it contains a hyphen-separated prefix (like "Personal-CRM-"), extract the UUID part
   // UUIDs are 32 hex characters, optionally with hyphens
-  const uuidPattern =
-    /([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})/i;
+  const uuidPattern = /([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})/i;
   const match = cleaned.match(uuidPattern);
 
   if (match) {
@@ -107,14 +100,14 @@ function validateDatabaseId(): void {
     throw new Error(
       "NOTION_DATABASE_ID is not configured. Please set it in your .env file. " +
         "Find your database ID in the Notion database URL (the long alphanumeric string after the last slash). " +
-        "Example: For URL 'https://notion.so/workspace/DATABASE_ID?v=...', use the DATABASE_ID part.",
+        "Example: For URL 'https://notion.so/workspace/DATABASE_ID?v=...', use the DATABASE_ID part."
     );
   }
 
   const databaseId = process.env.NOTION_DATABASE_ID.trim();
   if (databaseId.length === 0) {
     throw new Error(
-      "NOTION_DATABASE_ID is empty. Please set a valid database ID in your .env file.",
+      "NOTION_DATABASE_ID is empty. Please set a valid database ID in your .env file."
     );
   }
 
@@ -122,7 +115,7 @@ function validateDatabaseId(): void {
   if (databaseId.length < 20) {
     throw new Error(
       "NOTION_DATABASE_ID appears to be invalid. " +
-        "Database IDs are typically 32 characters long. Check your .env file.",
+        "Database IDs are typically 32 characters long. Check your .env file."
     );
   }
 }

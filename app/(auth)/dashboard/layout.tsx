@@ -6,16 +6,11 @@ import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-background relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-background">
       {/* Animated gradient background */}
       <motion.div
-        className="absolute inset-0 -z-10 opacity-20"
         animate={{
           background: [
             "radial-gradient(circle at 50% 50%, rgba(120, 41, 190, 0.5) 0%, rgba(53, 71, 125, 0.5) 50%, rgba(0, 0, 0, 0) 100%)",
@@ -24,6 +19,7 @@ export default function DashboardLayout({
             "radial-gradient(circle at 50% 50%, rgba(120, 41, 190, 0.5) 0%, rgba(53, 71, 125, 0.5) 50%, rgba(0, 0, 0, 0) 100%)",
           ],
         }}
+        className="absolute inset-0 -z-10 opacity-20"
         transition={{
           duration: 30,
           repeat: Number.POSITIVE_INFINITY,

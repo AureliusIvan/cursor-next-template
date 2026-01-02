@@ -12,7 +12,7 @@ export async function requireOwner() {
   }
 
   // Get full user with role from database
-  const userId = parseInt(String(session.user.id), 10);
+  const userId = Number.parseInt(String(session.user.id), 10);
   if (isNaN(userId)) {
     throw new Error("Invalid user ID");
   }

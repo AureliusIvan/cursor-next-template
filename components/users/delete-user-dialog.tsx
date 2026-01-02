@@ -25,12 +25,7 @@ interface DeleteUserDialogProps {
   onSuccess?: () => void;
 }
 
-export function DeleteUserDialog({
-  open,
-  onOpenChange,
-  user,
-  onSuccess,
-}: DeleteUserDialogProps) {
+export function DeleteUserDialog({ open, onOpenChange, user, onSuccess }: DeleteUserDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   if (!user) return null;
@@ -52,39 +47,36 @@ export function DeleteUserDialog({
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to delete user",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to delete user");
     } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Delete User</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete{" "}
-            <strong>{user.name || user.email}</strong>? This action cannot be
-            undone.
+            Are you sure you want to delete <strong>{user.name || user.email}</strong>? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isDeleting}
             className="rounded-2xl"
+            disabled={isDeleting}
+            onClick={() => onOpenChange(false)}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isDeleting}
             className="rounded-2xl"
+            disabled={isDeleting}
+            onClick={handleDelete}
+            variant="destructive"
           >
             {isDeleting ? "Deleting..." : "Delete User"}
           </Button>

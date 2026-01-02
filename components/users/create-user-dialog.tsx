@@ -26,11 +26,7 @@ interface UserFormData {
   emailVerified: boolean;
 }
 
-export function CreateUserDialog({
-  open,
-  onOpenChange,
-  onSuccess,
-}: CreateUserDialogProps) {
+export function CreateUserDialog({ open, onOpenChange, onSuccess }: CreateUserDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (data: UserFormData) => {
@@ -57,28 +53,26 @@ export function CreateUserDialog({
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to create user",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to create user");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Create New User</DialogTitle>
           <DialogDescription>
-            Add a new user to the system. They will be able to sign in with the
-            provided credentials.
+            Add a new user to the system. They will be able to sign in with the provided
+            credentials.
           </DialogDescription>
         </DialogHeader>
         <UserForm
-          onSubmit={handleSubmit}
-          onCancel={() => onOpenChange(false)}
           isSubmitting={isSubmitting}
+          onCancel={() => onOpenChange(false)}
+          onSubmit={handleSubmit}
         />
       </DialogContent>
     </Dialog>

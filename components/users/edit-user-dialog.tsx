@@ -35,12 +35,7 @@ interface UserFormData {
   emailVerified: boolean;
 }
 
-export function EditUserDialog({
-  open,
-  onOpenChange,
-  user,
-  onSuccess,
-}: EditUserDialogProps) {
+export function EditUserDialog({ open, onOpenChange, user, onSuccess }: EditUserDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!user) return null;
@@ -82,22 +77,19 @@ export function EditUserDialog({
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update user",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to update user");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Edit User</DialogTitle>
           <DialogDescription>
-            Update user information. Leave password blank to keep the current
-            password.
+            Update user information. Leave password blank to keep the current password.
           </DialogDescription>
         </DialogHeader>
         <UserForm
@@ -108,9 +100,9 @@ export function EditUserDialog({
             emailVerified: user.emailVerified,
           }}
           isEdit
-          onSubmit={handleSubmit}
-          onCancel={() => onOpenChange(false)}
           isSubmitting={isSubmitting}
+          onCancel={() => onOpenChange(false)}
+          onSubmit={handleSubmit}
         />
       </DialogContent>
     </Dialog>

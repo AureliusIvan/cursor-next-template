@@ -12,16 +12,12 @@ export async function POST() {
         message: `Successfully synced ${result.count} contacts to Algolia`,
         objectIDs: result.objectIDs,
       });
-    } else {
-      return NextResponse.json(
-        { success: false, error: result.error || "Algolia sync failed" },
-        { status: 500 },
-      );
     }
-  } catch (error) {
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 },
+      { success: false, error: result.error || "Algolia sync failed" },
+      { status: 500 }
     );
+  } catch (error) {
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }

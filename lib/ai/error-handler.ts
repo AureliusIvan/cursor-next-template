@@ -10,9 +10,7 @@ import type { ErrorInfo } from "./types";
  */
 export function detectErrorType(error: unknown): ErrorInfo {
   const errorMessage =
-    error instanceof Error
-      ? error.message.toLowerCase()
-      : String(error).toLowerCase();
+    error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
 
   // Check for rate limit errors
   if (
@@ -36,9 +34,7 @@ export function detectErrorType(error: unknown): ErrorInfo {
       status: 429,
       message: "Rate limit exceeded. Please try again later.",
       retryAfter:
-        typeof retryAfter === "number"
-          ? retryAfter
-          : parseInt(retryAfter, 10) || 60,
+        typeof retryAfter === "number" ? retryAfter : Number.parseInt(retryAfter, 10) || 60,
     };
   }
 

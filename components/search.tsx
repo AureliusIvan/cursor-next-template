@@ -59,7 +59,7 @@ function toAttributePath(attribute?: string): string | string[] | undefined {
 }
 
 function getByPath<T = unknown>(obj: unknown, path?: string): T | undefined {
-  if (!obj || !path) return undefined;
+  if (!(obj && path)) return undefined;
   const parts = path.split(".");
   let current: unknown = obj;
   for (const part of parts) {
@@ -75,10 +75,7 @@ function getByPath<T = unknown>(obj: unknown, path?: string): T | undefined {
 
 interface SearchButtonProps extends React.ComponentProps<typeof Button> {}
 
-export const SearchButton: React.FC<SearchButtonProps> = ({
-  className,
-  ...buttonProps
-}) => {
+export const SearchButton: React.FC<SearchButtonProps> = ({ className, ...buttonProps }) => {
   const [modifierLabel, setModifierLabel] = useState("⌘");
   const [isModifierPressed, setIsModifierPressed] = useState(false);
   const [isKPressed, setIsKPressed] = useState(false);
@@ -100,7 +97,7 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (!event.metaKey && !event.ctrlKey) {
+      if (!(event.metaKey || event.ctrlKey)) {
         setIsModifierPressed(false);
       }
       if (event.key.toLowerCase() === "k") {
@@ -129,31 +126,27 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
 
   return (
     <Button
+      aria-label="Open search"
+      className={cn(baseClassName, className)}
       type="button"
       variant="outline"
-      className={cn(baseClassName, className)}
-      aria-label="Open search"
       {...buttonProps}
     >
       <span className="flex items-center gap-2 text-muted-foreground opacity-80">
-        <SearchIcon size={24} color="currentColor" />
+        <SearchIcon color="currentColor" size={24} />
         <span className="hidden sm:inline">Search</span>
       </span>
-      <div className="hidden md:flex gap-0.5">
+      <div className="hidden gap-0.5 md:flex">
         <kbd
-          className={`h-5 min-w-5 rounded grid place-items-center bg-muted text-xs text-muted-foreground transition-all duration-200 ${
-            isModifierPressed
-              ? "inset-shadow-sm inset-shadow-foreground/30"
-              : "shadow-none"
+          className={`grid h-5 min-w-5 place-items-center rounded bg-muted text-muted-foreground text-xs transition-all duration-200 ${
+            isModifierPressed ? "inset-shadow-foreground/30 inset-shadow-sm" : "shadow-none"
           }`}
         >
           {modifierLabel}
         </kbd>
         <kbd
-          className={`h-5 min-w-5 rounded grid place-items-center bg-muted text-xs text-muted-foreground transition-all duration-200 ${
-            isKPressed
-              ? "inset-shadow-sm inset-shadow-foreground/30"
-              : "shadow-none"
+          className={`grid h-5 min-w-5 place-items-center rounded bg-muted text-muted-foreground text-xs transition-all duration-200 ${
+            isKPressed ? "inset-shadow-foreground/30 inset-shadow-sm" : "shadow-none"
           }`}
         >
           K
@@ -166,31 +159,23 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
 // Logo Component
 const AlgoliaLogo = ({ size = 150 }: { size?: number | string }) => (
   <svg
-    width="80"
-    height="24"
     aria-label="Algolia"
+    height="24"
     role="img"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 2196.2 500"
     style={{ maxWidth: size }}
+    viewBox="0 0 2196.2 500"
+    width="80"
+    xmlns="http://www.w3.org/2000/svg"
   >
     <defs>
       {/* eslint-disable-nextLine @docusaurus/no-untranslated-text */}
-      <style>{`.cls-1,.cls-2{fill:#003dff}.cls-2{fillRule:evenodd}`}</style>
+      <style>{".cls-1,.cls-2{fill:#003dff}.cls-2{fillRule:evenodd}"}</style>
     </defs>
     <path
       className="cls-2"
       d="M1070.38,275.3V5.91c0-3.63-3.24-6.39-6.82-5.83l-50.46,7.94c-2.87,.45-4.99,2.93-4.99,5.84l.17,273.22c0,12.92,0,92.7,95.97,95.49,3.33,.1,6.09-2.58,6.09-5.91v-40.78c0-2.96-2.19-5.51-5.12-5.84-34.85-4.01-34.85-47.57-34.85-54.72Z"
     />
-    <rect
-      className="cls-1"
-      x="1845.88"
-      y="104.73"
-      width="62.58"
-      height="277.9"
-      rx="5.9"
-      ry="5.9"
-    />
+    <rect className="cls-1" height="277.9" rx="5.9" ry="5.9" width="62.58" x="1845.88" y="104.73" />
     <path
       className="cls-2"
       d="M1851.78,71.38h50.77c3.26,0,5.9-2.64,5.9-5.9V5.9c0-3.62-3.24-6.39-6.82-5.83l-50.77,7.95c-2.87,.45-4.99,2.92-4.99,5.83v51.62c0,3.26,2.64,5.9,5.9,5.9Z"
@@ -252,17 +237,17 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center md:pt-[10vh] dark:bg-black/60"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm md:pt-[10vh] dark:bg-black/60"
       onClick={onClose}
     >
       <div
-        className="bg-background md:rounded-xl shadow-2xl w-full md:w-[90%] max-w-full md:max-w-[720px] h-full md:h-auto md:max-h-[80vh] overflow-hidden animate-in fade-in-0 zoom-in-95"
+        className="fade-in-0 zoom-in-95 h-full w-full max-w-full animate-in overflow-hidden bg-background shadow-2xl md:h-auto md:max-h-[80vh] md:w-[90%] md:max-w-[720px] md:rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
     </div>,
-    document.body,
+    document.body
   );
 };
 
@@ -298,10 +283,10 @@ const HitsList = memo(function HitsList({
       url: attributes.url,
       image: attributes.image,
     }),
-    [attributes],
+    [attributes]
   );
 
-  if (!attributes || !mapping.primaryText) {
+  if (!(attributes && mapping.primaryText)) {
     throw new Error("At least a primaryText is required to display results");
   }
 
@@ -310,21 +295,16 @@ const HitsList = memo(function HitsList({
       {hits.map((hit: any, idx: number) => {
         const isSel = selectedIndex === idx;
         const imageUrl = getByPath<string>(hit, mapping.image);
-        const url = urlGenerator
-          ? urlGenerator(hit)
-          : getByPath<string>(hit, mapping.url);
+        const url = urlGenerator ? urlGenerator(hit) : getByPath<string>(hit, mapping.url);
         const hasImage = Boolean(imageUrl);
         const isImageFailed = failedImages[hit.objectID] || !hasImage;
         const primaryVal = getByPath<string>(hit, mapping.primaryText);
         return (
           <a
-            key={hit.objectID}
-            href={url ?? "#"}
-            target={openResultsInNewTab && url ? "_blank" : undefined}
-            rel={openResultsInNewTab && url ? "noopener noreferrer" : undefined}
-            className="flex flex-row items-center gap-4 cursor-pointer text-decoration-none text-foreground bg-background rounded-sm p-4 aria-selected:bg-blue-50 dark:aria-selected:bg-slate-900 animate-in fade-in-0 zoom-in-95"
-            role="option"
             aria-selected={isSel}
+            className="fade-in-0 zoom-in-95 flex animate-in cursor-pointer flex-row items-center gap-4 rounded-sm bg-background p-4 text-decoration-none text-foreground aria-selected:bg-blue-50 dark:aria-selected:bg-slate-900"
+            href={url ?? "#"}
+            key={hit.objectID}
             onClick={() => {
               sendEvent?.("click", hit, "Hit Clicked");
             }}
@@ -336,45 +316,45 @@ const HitsList = memo(function HitsList({
               if (!hoverEnabled) return;
               onHoverIndex?.(idx);
             }}
+            rel={openResultsInNewTab && url ? "noopener noreferrer" : undefined}
+            role="option"
+            target={openResultsInNewTab && url ? "_blank" : undefined}
           >
             {hasImage ? (
-              <div className="w-[100px] h-[100px] self-start flex-[0_0_100px] items-center justify-center overflow-hidden rounded-sm bg-muted">
-                {!isImageFailed ? (
+              <div className="h-[100px] w-[100px] flex-[0_0_100px] items-center justify-center self-start overflow-hidden rounded-sm bg-muted">
+                {isImageFailed ? (
+                  <div
+                    aria-hidden="true"
+                    className="flex h-full w-full items-center justify-center text-muted-foreground"
+                  >
+                    <SearchIcon />
+                  </div>
+                ) : (
                   <img
-                    src={imageUrl as string}
                     alt={primaryVal || ""}
-                    className="w-full h-full object-contain rounded-sm"
+                    className="h-full w-full rounded-sm object-contain"
                     onError={() =>
                       setFailedImages((prev) => ({
                         ...prev,
                         [hit.objectID]: true,
                       }))
                     }
+                    src={imageUrl as string}
                   />
-                ) : (
-                  <div
-                    className="flex items-center justify-center w-full h-full text-muted-foreground"
-                    aria-hidden="true"
-                  >
-                    <SearchIcon />
-                  </div>
                 )}
               </div>
             ) : null}
             <div>
               <p className="font-medium [&_mark]:bg-transparent [&_mark]:text-secondary-foreground [&_mark]:underline [&_mark]:underline-offset-4">
-                <Highlight
-                  attribute={toAttributePath(mapping.primaryText) as any}
-                  hit={hit}
-                />
+                <Highlight attribute={toAttributePath(mapping.primaryText) as any} hit={hit} />
               </p>
               {mapping.secondaryText ? (
-                <p className="text-sm mt-2 text-muted-foreground">
+                <p className="mt-2 text-muted-foreground text-sm">
                   {getByPath<string | number>(hit, mapping.secondaryText)}
                 </p>
               ) : null}
               {mapping.tertiaryText ? (
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="mt-2 text-muted-foreground text-sm">
                   {getByPath<string | number>(hit, mapping.tertiaryText)}
                 </p>
               ) : null}
@@ -412,10 +392,6 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
   return (
     <search
       className={props.className}
-      onSubmit={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-      }}
       onReset={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -425,30 +401,30 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
           props.inputRef.current.focus();
         }
       }}
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }}
     >
       <div
+        aria-label="Search"
+        className="flex items-center justify-center rounded-full p-2 text-muted-foreground transition-colors peer-focus:text-[#003dff]"
         role="button"
         tabIndex={-1}
-        className="p-2 rounded-full flex items-center justify-center transition-colors text-muted-foreground peer-focus:text-[#003dff]"
-        aria-label="Search"
         title="Search"
       >
         <SearchIcon color="currentColor" strokeWidth={1.5} />
       </div>
       <input
-        ref={props.inputRef}
-        className="peer w-[90%] outline-none bg-transparent border-nonetext-foreground text-xl font-light peer [::-webkit-search-decoration]:appearance-none [::-webkit-search-cancel-button]:appearance-none [::-webkit-search-results-button]:appearance-none[::-webkit-search-results-decoration]:appearance-none"
+        autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
-        autoCapitalize="off"
-        placeholder={placeholder}
-        spellCheck={false}
-        inputMode="search"
+        autoFocus
+        className="peer peer w-[90%] border-nonetext-foreground bg-transparent font-light text-xl outline-none [::-webkit-search-cancel-button]:appearance-none [::-webkit-search-decoration]:appearance-none [::-webkit-search-results-button]:appearance-none[::-webkit-search-results-decoration]:appearance-none"
         id="algolia-search-input"
-        name="algolia-search-input"
+        inputMode="search"
         maxLength={512}
-        type="search"
-        value={query}
+        name="algolia-search-input"
         onChange={(event) => {
           setQuery(event.currentTarget.value);
         }}
@@ -468,13 +444,15 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
             props.onEnter?.();
           }
         }}
+        placeholder={placeholder}
+        ref={props.inputRef}
+        spellCheck={false}
+        type="search"
         // biome-ignore lint/a11y/noAutofocus: expected
-        autoFocus
+        value={query}
       />
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="ml-auto flex items-center gap-2">
         <Button
-          type="reset"
-          variant="ghost"
           className="px-2 text-muted-foreground"
           hidden={!query || query.length === 0 || isSearchStalled}
           onClick={() => {
@@ -483,14 +461,16 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
               props.inputRef.current.focus();
             }
           }}
+          type="reset"
+          variant="ghost"
         >
           Clear
         </Button>
         <Button
-          type="button"
-          variant="outline"
           className="px-2 text-muted-foreground"
           onClick={props.onClose}
+          type="button"
+          variant="outline"
         >
           esc
         </Button>
@@ -519,12 +499,12 @@ const SearchBox = memo(function SearchBox(props: SearchBoxProps) {
   return (
     <SearchInput
       className={props.className}
-      placeholder={props.placeholder}
       inputRef={props.inputRef}
-      onClose={props.onClose || (() => {})}
-      onEnter={props.onEnter}
       onArrowDown={props.onArrowDown}
       onArrowUp={props.onArrowUp}
+      onClose={props.onClose || (() => {})}
+      onEnter={props.onEnter}
+      placeholder={props.placeholder}
     />
   );
 });
@@ -536,16 +516,14 @@ interface NoResultsProps {
 
 const NoResults = memo(function NoResults({ query, onClear }: NoResultsProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 bg-muted p-4 h-[91vh] md:h-[50vh] text-foreground">
-      <div className="flex items-center p-2 justify-center w-10 h-10 rounded-full border-muted-foreground border">
+    <div className="flex h-[91vh] flex-col items-center justify-center gap-2 bg-muted p-4 text-foreground md:h-[50vh]">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-muted-foreground p-2">
         <SearchIcon />
       </div>
-      <p className="text-lg font-medium">No results for &quot;{query}&quot;</p>
-      <p className="text-sm text-muted-foreground">
-        Try a different query or ask AI to help.
-      </p>
+      <p className="font-medium text-lg">No results for &quot;{query}&quot;</p>
+      <p className="text-muted-foreground text-sm">Try a different query or ask AI to help.</p>
       <div className="flex items-center gap-2">
-        <Button variant="outline" onClick={onClear}>
+        <Button onClick={onClear} variant="outline">
           Clear query
         </Button>
       </div>
@@ -570,28 +548,28 @@ const ErrorDisplay = memo(function ErrorDisplay({
     errorMessage.toLowerCase().includes("not found");
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 bg-muted p-6 h-[91vh] md:h-[50vh] text-foreground">
-      <div className="flex items-center p-2 justify-center w-12 h-12 rounded-full border-destructive border-2">
+    <div className="flex h-[91vh] flex-col items-center justify-center gap-4 bg-muted p-6 text-foreground md:h-[50vh]">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-destructive p-2">
         <SearchIcon className="text-destructive" />
       </div>
-      <div className="text-center space-y-2">
-        <p className="text-lg font-medium">Search Error</p>
+      <div className="space-y-2 text-center">
+        <p className="font-medium text-lg">Search Error</p>
         {isIndexNotFound ? (
           <>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Index &quot;{indexName}&quot; does not exist in Algolia.
             </p>
-            <p className="text-sm text-muted-foreground">
-              Please create the index in your Algolia dashboard or update the
-              index name in your environment variables.
+            <p className="text-muted-foreground text-sm">
+              Please create the index in your Algolia dashboard or update the index name in your
+              environment variables.
             </p>
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">{errorMessage}</p>
+          <p className="text-muted-foreground text-sm">{errorMessage}</p>
         )}
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="outline" onClick={onClose}>
+        <Button onClick={onClose} variant="outline">
           Close
         </Button>
       </div>
@@ -627,9 +605,7 @@ const ResultsPanel = memo(function ResultsPanel({
     if (!scrollOnSelectionChange) return;
     const container = containerRef.current;
     if (!container) return;
-    const selectedEl = container.querySelector(
-      '[aria-selected="true"]',
-    ) as HTMLElement | null;
+    const selectedEl = container.querySelector('[aria-selected="true"]') as HTMLElement | null;
     if (!selectedEl) return;
 
     const padding = 8;
@@ -658,20 +634,20 @@ const ResultsPanel = memo(function ResultsPanel({
   return (
     <>
       <div
+        className="flex h-[91vh] flex-col gap-4 overflow-y-auto bg-muted p-2 md:h-[50vh]"
         ref={containerRef}
-        className="flex flex-col h-[91vh] md:h-[50vh] bg-muted gap-4 p-2 overflow-y-auto"
         role="listbox"
       >
         <HitsList
+          attributes={config.attributes}
           hits={items as unknown[]}
+          hoverEnabled={hoverEnabled}
+          onHoverIndex={onHoverIndex}
+          openResultsInNewTab={config.openResultsInNewTab}
           query={query}
           selectedIndex={selectedIndex}
-          attributes={config.attributes}
-          urlGenerator={config.urlGenerator}
-          onHoverIndex={onHoverIndex}
-          hoverEnabled={hoverEnabled}
           sendEvent={sendEvent}
-          openResultsInNewTab={config.openResultsInNewTab}
+          urlGenerator={config.urlGenerator}
         />
       </div>
     </>
@@ -693,14 +669,8 @@ export function SearchModal({ onClose, config }: SearchModalProps) {
   const noResults = results.results?.nbHits === 0;
   const hasError = results.status === "error" || results.error !== undefined;
   const errorMessage = results.error?.message || "";
-  const {
-    selectedIndex,
-    moveDown,
-    moveUp,
-    activateSelection,
-    hoverIndex,
-    selectionOrigin,
-  } = useKeyboardNavigation(items, query, config.openResultsInNewTab ?? true);
+  const { selectedIndex, moveDown, moveUp, activateSelection, hoverIndex, selectionOrigin } =
+    useKeyboardNavigation(items, query, config.openResultsInNewTab ?? true);
 
   const handleActivateSelection = useCallback((): boolean => {
     // Send click event for keyboard navigation before activating
@@ -721,21 +691,18 @@ export function SearchModal({ onClose, config }: SearchModalProps) {
 
   return (
     <>
-      <Configure
-        hitsPerPage={config.hitsPerPage || 8}
-        {...config.searchParameters}
-      />
+      <Configure hitsPerPage={config.hitsPerPage || 8} {...config.searchParameters} />
       <div className="flex flex-col">
         <SearchBox
-          query={query}
-          placeholder={config.placeholder || "What are you looking for?"}
-          className="flex flex-row items-center bg-background border-b border-muted rounded-t-sm p-2 placeholder:text-muted-foreground"
-          refine={refine}
-          onClose={onClose}
+          className="flex flex-row items-center rounded-t-sm border-muted border-b bg-background p-2 placeholder:text-muted-foreground"
+          inputRef={inputRef}
           onArrowDown={moveDown}
           onArrowUp={moveUp}
-          inputRef={inputRef}
+          onClose={onClose}
           onEnter={handleActivateSelection}
+          placeholder={config.placeholder || "What are you looking for?"}
+          query={query}
+          refine={refine}
         />
         {hasError ? (
           <ErrorDisplay
@@ -747,25 +714,25 @@ export function SearchModal({ onClose, config }: SearchModalProps) {
           <>
             {showResultsPanel && (
               <ResultsPanel
-                inputRef={inputRef}
-                query={query}
-                selectedIndex={selectedIndex}
-                refine={refine}
                 config={config}
+                inputRef={inputRef}
                 onHoverIndex={hoverIndex}
+                query={query}
+                refine={refine}
                 scrollOnSelectionChange={selectionOrigin !== "pointer"}
+                selectedIndex={selectedIndex}
                 sendEvent={sendEvent}
               />
             )}
             {noResults && query && (
               <NoResults
-                query={query}
                 onClear={() => {
                   refine("");
                   if (inputRef.current) {
                     inputRef.current.focus();
                   }
                 }}
+                query={query}
               />
             )}
           </>
@@ -784,21 +751,21 @@ const Footer = memo(function Footer() {
       ? `${basePoweredByUrl}&utm_source=${encodeURIComponent(window.location.hostname)}`
       : basePoweredByUrl;
   return (
-    <div className="flex items-center justify-between bg-background rounded-b-sm p-4">
+    <div className="flex items-center justify-between rounded-b-sm bg-background p-4">
       <div className="inline-flex items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
-          <kbd className="bg-muted rounded-sm h-6 flex items-center justify-center p-1 text-muted-foreground">
-            <CornerDownLeft size={20} color="currentColor" />
+          <kbd className="flex h-6 items-center justify-center rounded-sm bg-muted p-1 text-muted-foreground">
+            <CornerDownLeft color="currentColor" size={20} />
           </kbd>
           <span className="text-muted-foreground">Open</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <kbd className="bg-muted rounded-sm h-6 flex items-center justify-center p-1 text-muted-foreground">
-            <ArrowUp size={20} color="currentColor" />
+          <kbd className="flex h-6 items-center justify-center rounded-sm bg-muted p-1 text-muted-foreground">
+            <ArrowUp color="currentColor" size={20} />
           </kbd>
-          <kbd className="bg-muted rounded-sm h-6 flex items-center justify-center p-1 text-muted-foreground">
-            <ArrowDown size={20} color="currentColor" />
+          <kbd className="flex h-6 items-center justify-center rounded-sm bg-muted p-1 text-muted-foreground">
+            <ArrowDown color="currentColor" size={20} />
           </kbd>
           <span className="text-muted-foreground">Navigate</span>
         </div>
@@ -810,10 +777,10 @@ const Footer = memo(function Footer() {
         <a
           className="flex items-center gap-2 text-muted-foreground text-sm no-underline transition-colors hover:text-primary"
           href={poweredByHref}
-          target="_blank"
           rel="noopener sitesearch"
+          target="_blank"
         >
-          <span className="md:block hidden">Powered by</span>
+          <span className="hidden md:block">Powered by</span>
           <AlgoliaLogo />
         </a>
       </div>
@@ -854,12 +821,12 @@ export default function SearchExperience(config: SearchConfig) {
       <SearchButton {...buttonProps}>{config.buttonText}</SearchButton>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <InstantSearch
-          searchClient={searchClient}
-          indexName={config.indexName}
           future={{ preserveSharedStateOnUnmount: true }}
+          indexName={config.indexName}
           insights={config.insights ?? true}
+          searchClient={searchClient}
         >
-          <SearchModal onClose={closeModal} config={config} />
+          <SearchModal config={config} onClose={closeModal} />
         </InstantSearch>
       </Modal>
     </>

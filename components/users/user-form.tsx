@@ -41,7 +41,7 @@ export function UserForm({
     email: initialData?.email || "",
     password: "",
     role: initialData?.role || "ASSISTANT",
-    emailVerified: initialData?.emailVerified || false,
+    emailVerified: initialData?.emailVerified,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,10 +49,7 @@ export function UserForm({
     await onSubmit(formData);
   };
 
-  const handleChange = (
-    field: keyof UserFormData,
-    value: string | boolean | Role,
-  ) => {
+  const handleChange = (field: keyof UserFormData, value: string | boolean | Role) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -60,16 +57,16 @@ export function UserForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <div>
         <Label htmlFor="name">Name</Label>
         <Input
-          type="text"
-          id="name"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
           className="rounded-xl"
+          id="name"
+          onChange={(e) => handleChange("name", e.target.value)}
           placeholder="John Doe"
+          type="text"
+          value={formData.name}
         />
       </div>
 
@@ -78,13 +75,13 @@ export function UserForm({
           Email <span className="text-destructive">*</span>
         </Label>
         <Input
-          type="email"
-          id="email"
-          required
-          value={formData.email}
-          onChange={(e) => handleChange("email", e.target.value)}
           className="rounded-xl"
+          id="email"
+          onChange={(e) => handleChange("email", e.target.value)}
           placeholder="user@example.com"
+          required
+          type="email"
+          value={formData.email}
         />
       </div>
 
@@ -92,33 +89,29 @@ export function UserForm({
         <Label htmlFor="password">
           Password {!isEdit && <span className="text-destructive">*</span>}
           {isEdit && (
-            <span className="text-muted-foreground text-xs">
-              (leave blank to keep current)
-            </span>
+            <span className="text-muted-foreground text-xs">(leave blank to keep current)</span>
           )}
         </Label>
         <Input
-          type="password"
-          id="password"
-          required={!isEdit}
-          value={formData.password}
-          onChange={(e) => handleChange("password", e.target.value)}
           className="rounded-xl"
-          placeholder={isEdit ? "••••••••" : "Enter password"}
+          id="password"
           minLength={8}
+          onChange={(e) => handleChange("password", e.target.value)}
+          placeholder={isEdit ? "••••••••" : "Enter password"}
+          required={!isEdit}
+          type="password"
+          value={formData.password}
         />
-        <p className="text-muted-foreground text-xs mt-1">
-          Must be at least 8 characters
-        </p>
+        <p className="mt-1 text-muted-foreground text-xs">Must be at least 8 characters</p>
       </div>
 
       <div>
         <Label htmlFor="role">Role</Label>
         <Select
-          value={formData.role}
           onValueChange={(value) => handleChange("role", value as Role)}
+          value={formData.role}
         >
-          <SelectTrigger className="rounded-xl w-full">
+          <SelectTrigger className="w-full rounded-xl">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -131,31 +124,29 @@ export function UserForm({
       {isEdit && (
         <div className="flex items-center space-x-2">
           <Checkbox
-            id="emailVerified"
             checked={formData.emailVerified}
-            onCheckedChange={(checked) =>
-              handleChange("emailVerified", checked === true)
-            }
+            id="emailVerified"
+            onCheckedChange={(checked) => handleChange("emailVerified", checked === true)}
           />
-          <Label htmlFor="emailVerified" className="cursor-pointer">
+          <Label className="cursor-pointer" htmlFor="emailVerified">
             Email Verified
           </Label>
         </div>
       )}
 
-      <div className="flex gap-3 justify-end pt-6 border-t mt-6">
+      <div className="mt-6 flex justify-end gap-3 border-t pt-6">
         <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium rounded-2xl border border-input bg-background hover:bg-accent transition-colors"
+          className="rounded-2xl border border-input bg-background px-4 py-2 font-medium text-sm transition-colors hover:bg-accent"
           disabled={isSubmitting}
+          onClick={onCancel}
+          type="button"
         >
           Cancel
         </button>
         <button
-          type="submit"
+          className="rounded-2xl bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
           disabled={isSubmitting}
-          className="px-4 py-2 text-sm font-medium rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+          type="submit"
         >
           {isSubmitting
             ? isEdit

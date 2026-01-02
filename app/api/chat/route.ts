@@ -5,12 +5,7 @@
 
 import { devToolsMiddleware } from "@ai-sdk/devtools";
 import { google } from "@ai-sdk/google";
-import {
-  convertToModelMessages,
-  stepCountIs,
-  streamText,
-  wrapLanguageModel,
-} from "ai";
+import { convertToModelMessages, stepCountIs, streamText, wrapLanguageModel } from "ai";
 import { buildErrorResponse } from "@/lib/ai/error-handler";
 import { getSystemPrompt } from "@/lib/ai/prompts";
 import { getFilteredTools } from "@/lib/ai/tools";
@@ -26,7 +21,7 @@ export async function POST(req: Request) {
     let body: unknown;
     try {
       body = await req.json();
-    } catch (parseError) {
+    } catch {
       return new Response("Invalid JSON in request body", { status: 400 });
     }
 
@@ -42,7 +37,7 @@ export async function POST(req: Request) {
     };
 
     // Validate messages
-    if (!messages || !Array.isArray(messages)) {
+    if (!(messages && Array.isArray(messages))) {
       return new Response("Invalid request: messages array required", {
         status: 400,
       });
@@ -64,8 +59,7 @@ export async function POST(req: Request) {
     const systemPrompt = getSystemPrompt(mode);
 
     // Get tools for agentic mode
-    const tools =
-      mode === "agentic" ? getFilteredTools(enabledTools) : undefined;
+    const tools = mode === "agentic" ? getFilteredTools(enabledTools) : undefined;
 
     // Stream response
     const result = streamText({

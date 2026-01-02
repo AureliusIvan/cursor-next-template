@@ -86,20 +86,17 @@ export function UserList({ initialUsers }: UserListProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+        <div className="relative max-w-md flex-1">
+          <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
           <Input
-            type="search"
-            placeholder="Search users..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
             className="rounded-2xl pl-9"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search users..."
+            type="search"
+            value={searchQuery}
           />
         </div>
-        <Button
-          onClick={() => setCreateDialogOpen(true)}
-          className="rounded-2xl"
-        >
+        <Button className="rounded-2xl" onClick={() => setCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Create User
         </Button>
@@ -108,13 +105,11 @@ export function UserList({ initialUsers }: UserListProps) {
       {filteredUsers.length === 0 ? (
         <div className="flex h-96 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed">
           <p className="text-muted-foreground">
-            {searchQuery
-              ? "No users found matching your search."
-              : "No users found."}
+            {searchQuery ? "No users found matching your search." : "No users found."}
           </p>
         </div>
       ) : (
-        <div className="rounded-3xl border border-dashed bg-background overflow-hidden">
+        <div className="overflow-hidden rounded-3xl border border-dashed bg-background">
           <Table>
             <TableHeader>
               <TableRow>
@@ -129,23 +124,18 @@ export function UserList({ initialUsers }: UserListProps) {
             <TableBody>
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">
-                    {user.name || "-"}
-                  </TableCell>
+                  <TableCell className="font-medium">{user.name || "-"}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <RoleBadge role={user.role} />
                   </TableCell>
                   <TableCell>
                     {user.emailVerified ? (
-                      <Badge variant="outline" className="rounded-full">
+                      <Badge className="rounded-full" variant="outline">
                         Verified
                       </Badge>
                     ) : (
-                      <Badge
-                        variant="outline"
-                        className="rounded-full text-muted-foreground"
-                      >
+                      <Badge className="rounded-full text-muted-foreground" variant="outline">
                         Not Verified
                       </Badge>
                     )}
@@ -156,29 +146,29 @@ export function UserList({ initialUsers }: UserListProps) {
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleViewSessions(user)}
                         className="h-8 w-8 rounded-xl"
+                        onClick={() => handleViewSessions(user)}
+                        size="icon"
                         title="View Sessions"
+                        variant="ghost"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(user)}
                         className="h-8 w-8 rounded-xl"
+                        onClick={() => handleEdit(user)}
+                        size="icon"
                         title="Edit User"
+                        variant="ghost"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(user)}
                         className="h-8 w-8 rounded-xl text-destructive hover:text-destructive"
+                        onClick={() => handleDelete(user)}
+                        size="icon"
                         title="Delete User"
+                        variant="ghost"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -192,28 +182,28 @@ export function UserList({ initialUsers }: UserListProps) {
       )}
 
       <CreateUserDialog
-        open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
         onSuccess={handleRefresh}
+        open={createDialogOpen}
       />
 
       <EditUserDialog
-        open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
-        user={selectedUser}
         onSuccess={handleRefresh}
+        open={editDialogOpen}
+        user={selectedUser}
       />
 
       <DeleteUserDialog
-        open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
-        user={selectedUser}
         onSuccess={handleRefresh}
+        open={deleteDialogOpen}
+        user={selectedUser}
       />
 
       <UserSessionsDialog
-        open={sessionsDialogOpen}
         onOpenChange={setSessionsDialogOpen}
+        open={sessionsDialogOpen}
         user={selectedUser}
       />
     </div>

@@ -23,22 +23,13 @@ function getErrorStatus(error: unknown): number {
     if (notionError.status) {
       return notionError.status;
     }
-    if (
-      notionError.code === "unauthorized" ||
-      message.includes("unauthorized")
-    ) {
+    if (notionError.code === "unauthorized" || message.includes("unauthorized")) {
       return 401;
     }
-    if (
-      notionError.code === "object_not_found" ||
-      message.includes("not found")
-    ) {
+    if (notionError.code === "object_not_found" || message.includes("not found")) {
       return 404;
     }
-    if (
-      notionError.code === "validation_error" ||
-      message.includes("validation")
-    ) {
+    if (notionError.code === "validation_error" || message.includes("validation")) {
       return 400;
     }
   }
@@ -100,7 +91,7 @@ export async function POST() {
           error: errorMessage,
           details: notionResult.details || notionResult.error,
         },
-        { status },
+        { status }
       );
     }
 
@@ -134,7 +125,7 @@ export async function POST() {
         error: errorMessage,
         details: error instanceof Error ? error.message : String(error),
       },
-      { status },
+      { status }
     );
   }
 }

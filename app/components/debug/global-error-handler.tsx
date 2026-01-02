@@ -19,9 +19,7 @@ export function GlobalErrorHandler() {
         type: "synchronous" as const,
         message: event.message,
         stack: event.error?.stack,
-        location: event.filename
-          ? `${event.filename}:${event.lineno}:${event.colno}`
-          : undefined,
+        location: event.filename ? `${event.filename}:${event.lineno}:${event.colno}` : undefined,
         timestamp: new Date().toISOString(),
       };
 
@@ -37,7 +35,7 @@ export function GlobalErrorHandler() {
           filename: event.filename,
           lineno: event.lineno,
           colno: event.colno,
-        },
+        }
       );
 
       // Also log in a format Cursor can easily parse
@@ -49,10 +47,7 @@ export function GlobalErrorHandler() {
 
     // Handle unhandled promise rejections
     const handleRejection = (event: PromiseRejectionEvent) => {
-      const error =
-        event.reason instanceof Error
-          ? event.reason
-          : new Error(String(event.reason));
+      const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
 
       const errorData = {
         type: "promise_rejection" as const,
@@ -69,7 +64,7 @@ export function GlobalErrorHandler() {
           function: "handleRejection",
           type: "promise_rejection",
         },
-        error,
+        error
       );
 
       // Also log in a format Cursor can easily parse

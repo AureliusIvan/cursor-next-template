@@ -2,12 +2,7 @@
  * Tool registry - exports all available tools for the AI assistant
  */
 
-import {
-  getContact,
-  listContacts,
-  queryNotionDatabase,
-  searchContacts,
-} from "./crm-tools";
+import { getContact, listContacts, queryNotionDatabase, searchContacts } from "./crm-tools";
 import { webSearch } from "./web-tools";
 
 /**
@@ -28,11 +23,8 @@ export type ToolName = keyof typeof agenticTools;
  * If no enabledTools provided, returns all tools
  */
 export function getFilteredTools(
-  enabledTools?: string[],
-):
-  | typeof agenticTools
-  | Record<string, (typeof agenticTools)[ToolName]>
-  | undefined {
+  enabledTools?: string[]
+): typeof agenticTools | Record<string, (typeof agenticTools)[ToolName]> | undefined {
   // If no tools specified, return all tools
   if (!enabledTools || enabledTools.length === 0) {
     return agenticTools;
@@ -52,10 +44,4 @@ export function getFilteredTools(
 }
 
 // Export individual tools for direct use
-export {
-  searchContacts,
-  getContact,
-  listContacts,
-  queryNotionDatabase,
-  webSearch,
-};
+export { searchContacts, getContact, listContacts, queryNotionDatabase, webSearch };

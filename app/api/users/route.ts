@@ -1,7 +1,5 @@
 import bcrypt from "bcryptjs";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import { requireOwner } from "@/lib/auth-helpers";
 import prisma from "@/lib/prisma";
 
@@ -10,11 +8,7 @@ export async function GET() {
     await requireOwner();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unauthorized";
-    const status = message.includes("Forbidden")
-      ? 403
-      : message.includes("not found")
-        ? 404
-        : 401;
+    const status = message.includes("Forbidden") ? 403 : message.includes("not found") ? 404 : 401;
     return NextResponse.json({ error: message }, { status });
   }
 
@@ -42,10 +36,7 @@ export async function GET() {
     return NextResponse.json({ users });
   } catch (error) {
     console.error("Error fetching users:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch users" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 }
 
@@ -54,11 +45,7 @@ export async function POST(request: Request) {
     await requireOwner();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unauthorized";
-    const status = message.includes("Forbidden")
-      ? 403
-      : message.includes("not found")
-        ? 404
-        : 401;
+    const status = message.includes("Forbidden") ? 403 : message.includes("not found") ? 404 : 401;
     return NextResponse.json({ error: message }, { status });
   }
 
@@ -74,17 +61,14 @@ export async function POST(request: Request) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      return NextResponse.json(
-        { error: "Invalid email format" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
     }
 
     // Validate password
     if (!password || typeof password !== "string" || password.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters long" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -98,10 +82,7 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: "User with this email already exists" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "User with this email already exists" }, { status: 400 });
     }
 
     // Create user using Better Auth's sign-up API internally
@@ -144,21 +125,10 @@ export async function POST(request: Request) {
     console.error("Error creating user:", error);
 
     // Handle Prisma unique constraint violation
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
-      return NextResponse.json(
-        { error: "User with this email already exists" },
-        { status: 400 },
-      );
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+      return NextResponse.json({ error: "User with this email already exists" }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: "Failed to create user" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
   }
 }

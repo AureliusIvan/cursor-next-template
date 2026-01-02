@@ -35,34 +35,21 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ projects });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch projects" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const {
-      name,
-      description,
-      status,
-      priority,
-      progress,
-      startDate,
-      endDate,
-    } = body;
+    const { name, description, status, priority, progress, startDate, endDate } = body;
 
     if (!name || name.trim() === "") {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     // Validate progress is between 0-100
-    const progressValue = progress
-      ? Math.min(100, Math.max(0, Number(progress)))
-      : 0;
+    const progressValue = progress ? Math.min(100, Math.max(0, Number(progress))) : 0;
 
     const project = await prisma.project.create({
       data: {
@@ -81,9 +68,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to create project" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
   }
 }

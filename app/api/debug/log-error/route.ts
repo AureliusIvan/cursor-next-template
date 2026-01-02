@@ -9,10 +9,7 @@ import { isDev } from "@/lib/dev-utils";
  */
 export async function POST(request: Request) {
   if (!isDev()) {
-    return NextResponse.json(
-      { error: "Not available in production" },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: "Not available in production" }, { status: 403 });
   }
 
   try {

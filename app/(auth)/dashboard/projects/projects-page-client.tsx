@@ -11,15 +11,13 @@ interface ProjectsPageClientProps {
   initialProjects: Project[];
 }
 
-export function ProjectsPageClient({
-  initialProjects,
-}: ProjectsPageClientProps) {
+export function ProjectsPageClient({ initialProjects }: ProjectsPageClientProps) {
   return (
     <div className="w-full">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-2xl font-semibold">Projects</h1>
+        <h1 className="font-semibold text-2xl">Projects</h1>
         <div className="hidden gap-2 md:flex">
-          <Button variant="outline" className="rounded-2xl">
+          <Button className="rounded-2xl" variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
@@ -29,9 +27,9 @@ export function ProjectsPageClient({
 
       <AnimatePresence mode="wait">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
         >
           <div className="rounded-3xl border border-dashed bg-background p-6">

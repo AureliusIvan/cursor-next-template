@@ -3,27 +3,20 @@ import { NextResponse } from "next/server";
 import { requireOwner } from "@/lib/auth-helpers";
 import prisma from "@/lib/prisma";
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   let currentUser;
   try {
     const result = await requireOwner();
     currentUser = result.user;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unauthorized";
-    const status = message.includes("Forbidden")
-      ? 403
-      : message.includes("not found")
-        ? 404
-        : 401;
+    const status = message.includes("Forbidden") ? 403 : message.includes("not found") ? 404 : 401;
     return NextResponse.json({ error: message }, { status });
   }
 
   try {
     const { id } = await params;
-    const userId = parseInt(id, 10);
+    const userId = Number.parseInt(id, 10);
 
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -43,27 +36,18 @@ export async function PATCH(
 
     // Prevent users from changing their own role
     if (currentUser.id === userId && role && role !== existingUser.role) {
-      return NextResponse.json(
-        { error: "You cannot change your own role" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "You cannot change your own role" }, { status: 400 });
     }
 
     // Validate email if provided
     if (email !== undefined) {
       if (!email || typeof email !== "string" || !email.trim()) {
-        return NextResponse.json(
-          { error: "Email is required" },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: "Email is required" }, { status: 400 });
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
-        return NextResponse.json(
-          { error: "Invalid email format" },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
       }
 
       // Check if email is already taken by another user
@@ -72,21 +56,20 @@ export async function PATCH(
       });
 
       if (emailUser && emailUser.id !== userId) {
-        return NextResponse.json(
-          { error: "Email is already taken" },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: "Email is already taken" }, { status: 400 });
       }
     }
 
     // Validate password if provided
-    if (password !== undefined && password !== "") {
-      if (typeof password !== "string" || password.length < 8) {
-        return NextResponse.json(
-          { error: "Password must be at least 8 characters long" },
-          { status: 400 },
-        );
-      }
+    if (
+      password !== undefined &&
+      password !== "" &&
+      (typeof password !== "string" || password.length < 8)
+    ) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters long" },
+        { status: 400 }
+      );
     }
 
     // Validate role if provided
@@ -128,7 +111,7 @@ export async function PATCH(
       // Update or create account
       const account = await prisma.account.findFirst({
         where: {
-          userId: userId,
+          userId,
           providerId: "credential",
         },
       });
@@ -141,7 +124,7 @@ export async function PATCH(
       } else {
         await prisma.account.create({
           data: {
-            userId: userId,
+            userId,
             accountId: updatedUser.email,
             providerId: "credential",
             password: hashedPassword,
@@ -164,46 +147,28 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating user:", error);
 
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
-      return NextResponse.json(
-        { error: "Email is already taken" },
-        { status: 400 },
-      );
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+      return NextResponse.json({ error: "Email is already taken" }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: "Failed to update user" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   let currentUser;
   try {
     const result = await requireOwner();
     currentUser = result.user;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unauthorized";
-    const status = message.includes("Forbidden")
-      ? 403
-      : message.includes("not found")
-        ? 404
-        : 401;
+    const status = message.includes("Forbidden") ? 403 : message.includes("not found") ? 404 : 401;
     return NextResponse.json({ error: message }, { status });
   }
 
   try {
     const { id } = await params;
-    const userId = parseInt(id, 10);
+    const userId = Number.parseInt(id, 10);
 
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -211,10 +176,7 @@ export async function DELETE(
 
     // Prevent users from deleting themselves
     if (currentUser.id === userId) {
-      return NextResponse.json(
-        { error: "You cannot delete your own account" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "You cannot delete your own account" }, { status: 400 });
     }
 
     // Check if user exists
@@ -234,9 +196,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting user:", error);
-    return NextResponse.json(
-      { error: "Failed to delete user" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
   }
 }

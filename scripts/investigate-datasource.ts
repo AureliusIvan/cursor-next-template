@@ -35,7 +35,7 @@ async function investigate() {
     for (const ds of searchResult.results) {
       console.log(`  - ID: ${ds.id}`);
       console.log(`    Object: ${ds.object}`);
-      console.log(`    Full:`, JSON.stringify(ds, null, 2).slice(0, 500));
+      console.log("    Full:", JSON.stringify(ds, null, 2).slice(0, 500));
     }
   } catch (error: any) {
     console.log(`Error: ${error.code} - ${error.message}`);
@@ -64,10 +64,7 @@ async function investigate() {
       method: "post",
       body: {},
     });
-    console.log(
-      "Success! Response:",
-      JSON.stringify(response, null, 2).slice(0, 1000),
-    );
+    console.log("Success! Response:", JSON.stringify(response, null, 2).slice(0, 1000));
   } catch (error: any) {
     console.log(`Error: ${error.code} - ${error.message}`);
     if (error.body) {
@@ -78,18 +75,15 @@ async function investigate() {
   // 6. Try fetching with raw fetch to see raw API response
   console.log("\n6️⃣ Raw fetch to databases/{id}/query:");
   try {
-    const response = await fetch(
-      `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${NOTION_API_KEY}`,
-          "Notion-Version": "2022-06-28", // Try older API version
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
+    const response = await fetch(`https://api.notion.com/v1/databases/${DATABASE_ID}/query`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${NOTION_API_KEY}`,
+        "Notion-Version": "2022-06-28", // Try older API version
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({}),
+    });
     const data = await response.json();
     console.log(`Status: ${response.status}`);
     console.log("Response:", JSON.stringify(data, null, 2).slice(0, 1000));

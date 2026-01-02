@@ -58,15 +58,11 @@ export function ContactForm() {
             // Switch to manual tab to show the filled form
             setActiveTab("manual");
           } else {
-            setExtractionError(
-              data.error || "Failed to extract contact information",
-            );
+            setExtractionError(data.error || "Failed to extract contact information");
           }
         } catch (error) {
           setExtractionError(
-            error instanceof Error
-              ? error.message
-              : "Failed to extract contact information",
+            error instanceof Error ? error.message : "Failed to extract contact information"
           );
         } finally {
           setIsExtracting(false);
@@ -123,11 +119,7 @@ export function ContactForm() {
 
   if (!isOpen) {
     return (
-      <Button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="rounded-2xl"
-      >
+      <Button className="rounded-2xl" onClick={() => setIsOpen(true)} type="button">
         <Plus className="mr-2 h-4 w-4" />
         Add Contact
       </Button>
@@ -135,68 +127,48 @@ export function ContactForm() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-3xl border p-8 w-full max-w-md shadow-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-semibold mb-6 pb-4 border-b">
-          Add New Contact
-        </h2>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="manual" className="rounded-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border bg-background p-8 shadow-lg">
+        <h2 className="mb-6 border-b pb-4 font-semibold text-2xl">Add New Contact</h2>
+        <Tabs className="w-full" onValueChange={setActiveTab} value={activeTab}>
+          <TabsList className="mb-6 grid w-full grid-cols-2">
+            <TabsTrigger className="rounded-xl" value="manual">
               Manual Entry
             </TabsTrigger>
-            <TabsTrigger value="extract" className="rounded-xl">
+            <TabsTrigger className="rounded-xl" value="extract">
               Extract from Image
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="extract" className="space-y-4">
+          <TabsContent className="space-y-4" value="extract">
             <div className="space-y-4">
-              {!uploadedImage ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Upload an image of a business card, contact screenshot, or
-                    any image containing contact information.
-                  </p>
-                  <UploadDropzone
-                    control={control}
-                    accept="image/*"
-                    description={{
-                      fileTypes: "Images only",
-                      maxFileSize: "10MB",
-                      maxFiles: 1,
-                    }}
-                  />
-                </div>
-              ) : (
+              {uploadedImage ? (
                 <div className="space-y-4">
                   <div className="relative rounded-lg border p-4">
-                    <div className="flex items-start justify-between mb-2">
+                    <div className="mb-2 flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <ImageIcon className="h-5 w-5 text-muted-foreground" />
-                        <span className="text-sm font-medium">
-                          {uploadedImage.name}
-                        </span>
+                        <span className="font-medium text-sm">{uploadedImage.name}</span>
                       </div>
                       <Button
+                        className="h-6 w-6 p-0"
+                        onClick={handleRemoveImage}
+                        size="sm"
                         type="button"
                         variant="ghost"
-                        size="sm"
-                        onClick={handleRemoveImage}
-                        className="h-6 w-6 p-0"
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                     <img
-                      src={uploadedImage.url}
                       alt="Uploaded contact image"
-                      className="w-full rounded-lg border max-h-64 object-contain"
+                      className="max-h-64 w-full rounded-lg border object-contain"
+                      src={uploadedImage.url}
                     />
                   </div>
 
                   {isExtracting && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>Extracting contact information...</span>
                     </div>
@@ -204,104 +176,114 @@ export function ContactForm() {
 
                   {extractionError && (
                     <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3">
-                      <p className="text-sm text-destructive">
-                        {extractionError}
-                      </p>
+                      <p className="text-destructive text-sm">{extractionError}</p>
                     </div>
                   )}
 
-                  {!isExtracting && !extractionError && (
+                  {!(isExtracting || extractionError) && (
                     <div className="rounded-lg border border-green-500/50 bg-green-500/10 p-3">
-                      <p className="text-sm text-green-700 dark:text-green-400">
-                        Contact information extracted! Switch to "Manual Entry"
-                        tab to review and edit.
+                      <p className="text-green-700 text-sm dark:text-green-400">
+                        Contact information extracted! Switch to "Manual Entry" tab to review and
+                        edit.
                       </p>
                     </div>
                   )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-muted-foreground text-sm">
+                    Upload an image of a business card, contact screenshot, or any image containing
+                    contact information.
+                  </p>
+                  <UploadDropzone
+                    accept="image/*"
+                    control={control}
+                    description={{
+                      fileTypes: "Images only",
+                      maxFileSize: "10MB",
+                      maxFiles: 1,
+                    }}
+                  />
                 </div>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="manual">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <Label htmlFor="name">
                   Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  type="text"
+                  className="rounded-xl"
                   id="name"
                   name="name"
-                  required
-                  value={formData.name}
                   onChange={handleChange}
-                  className="rounded-xl"
+                  required
+                  type="text"
+                  value={formData.name}
                 />
               </div>
 
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  type="email"
+                  className="rounded-xl"
                   id="email"
                   name="email"
-                  value={formData.email}
                   onChange={handleChange}
-                  className="rounded-xl"
+                  type="email"
+                  value={formData.email}
                 />
               </div>
 
               <div>
                 <Label htmlFor="phone">Phone</Label>
                 <Input
-                  type="tel"
+                  className="rounded-xl"
                   id="phone"
                   name="phone"
-                  value={formData.phone}
                   onChange={handleChange}
-                  className="rounded-xl"
+                  type="tel"
+                  value={formData.phone}
                 />
               </div>
 
               <div>
                 <Label htmlFor="company">Company</Label>
                 <Input
-                  type="text"
+                  className="rounded-xl"
                   id="company"
                   name="company"
-                  value={formData.company}
                   onChange={handleChange}
-                  className="rounded-xl"
+                  type="text"
+                  value={formData.company}
                 />
               </div>
 
               <div>
                 <Label htmlFor="role">Role</Label>
                 <Input
-                  type="text"
+                  className="rounded-xl"
                   id="role"
                   name="role"
-                  value={formData.role}
                   onChange={handleChange}
-                  className="rounded-xl"
+                  type="text"
+                  value={formData.role}
                 />
               </div>
 
-              <div className="flex gap-3 justify-end pt-6 border-t mt-6">
+              <div className="mt-6 flex justify-end gap-3 border-t pt-6">
                 <Button
+                  className="rounded-2xl"
+                  onClick={handleClose}
                   type="button"
                   variant="outline"
-                  onClick={handleClose}
-                  className="rounded-2xl"
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="rounded-2xl"
-                >
+                <Button className="rounded-2xl" disabled={isSubmitting} type="submit">
                   {isSubmitting ? "Creating..." : "Create Contact"}
                 </Button>
               </div>

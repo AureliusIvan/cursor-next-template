@@ -14,14 +14,13 @@ interface AlgoliaContact {
 
 export async function syncContactsToAlgolia() {
   const applicationId = process.env.ALGOLIA_APPLICATION_ID;
-  const apiKey =
-    process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
+  const apiKey = process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
   const indexName = process.env.ALGOLIA_CONTACTS_INDEX || "contacts";
 
-  if (!applicationId || !apiKey) {
+  if (!(applicationId && apiKey)) {
     debug(
       { component: "AlgoliaSync", function: "syncContactsToAlgolia" },
-      "Algolia credentials not configured",
+      "Algolia credentials not configured"
     );
     return {
       success: false,
@@ -36,7 +35,7 @@ export async function syncContactsToAlgolia() {
     debug(
       { component: "AlgoliaSync", function: "syncContactsToAlgolia" },
       "Starting Algolia sync",
-      { indexName },
+      { indexName }
     );
 
     // Fetch all contacts from database
@@ -52,10 +51,7 @@ export async function syncContactsToAlgolia() {
     });
 
     if (contacts.length === 0) {
-      debug(
-        { component: "AlgoliaSync", function: "syncContactsToAlgolia" },
-        "No contacts to sync",
-      );
+      debug({ component: "AlgoliaSync", function: "syncContactsToAlgolia" }, "No contacts to sync");
       return { success: true, count: 0 };
     }
 
@@ -88,7 +84,7 @@ export async function syncContactsToAlgolia() {
         contactsCount: contacts.length,
         batchesProcessed: Array.isArray(response) ? response.length : 0,
         objectIDsCount: objectIDs.length,
-      },
+      }
     );
 
     // Configure searchable attributes and ranking
@@ -102,7 +98,7 @@ export async function syncContactsToAlgolia() {
 
     debug(
       { component: "AlgoliaSync", function: "syncContactsToAlgolia" },
-      "Algolia index settings configured",
+      "Algolia index settings configured"
     );
 
     return {
@@ -114,7 +110,7 @@ export async function syncContactsToAlgolia() {
     debugError(
       { component: "AlgoliaSync" },
       error instanceof Error ? error : new Error(String(error)),
-      { indexName },
+      { indexName }
     );
     return {
       success: false,
@@ -125,11 +121,10 @@ export async function syncContactsToAlgolia() {
 
 export async function deleteContactFromAlgolia(contactId: number) {
   const applicationId = process.env.ALGOLIA_APPLICATION_ID;
-  const apiKey =
-    process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
+  const apiKey = process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
   const indexName = process.env.ALGOLIA_CONTACTS_INDEX || "contacts";
 
-  if (!applicationId || !apiKey) {
+  if (!(applicationId && apiKey)) {
     return { success: false, error: "Algolia credentials not configured" };
   }
 
@@ -145,7 +140,7 @@ export async function deleteContactFromAlgolia(contactId: number) {
   } catch (error) {
     debugError(
       { component: "AlgoliaSync", function: "deleteContactFromAlgolia" },
-      error instanceof Error ? error : new Error(String(error)),
+      error instanceof Error ? error : new Error(String(error))
     );
     return {
       success: false,
@@ -163,11 +158,10 @@ export async function upsertContactToAlgolia(contact: {
   role?: string | null;
 }) {
   const applicationId = process.env.ALGOLIA_APPLICATION_ID;
-  const apiKey =
-    process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
+  const apiKey = process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_API_KEY;
   const indexName = process.env.ALGOLIA_CONTACTS_INDEX || "contacts";
 
-  if (!applicationId || !apiKey) {
+  if (!(applicationId && apiKey)) {
     return { success: false, error: "Algolia credentials not configured" };
   }
 
@@ -193,7 +187,7 @@ export async function upsertContactToAlgolia(contact: {
   } catch (error) {
     debugError(
       { component: "AlgoliaSync", function: "upsertContactToAlgolia" },
-      error instanceof Error ? error : new Error(String(error)),
+      error instanceof Error ? error : new Error(String(error))
     );
     return {
       success: false,

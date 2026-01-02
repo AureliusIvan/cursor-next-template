@@ -20,7 +20,7 @@ function run() {
     const filePath = data?.tool_input?.file_path;
 
     // Only run tsc for TypeScript files (exclude .d.ts)
-    if (!filePath || !filePath.endsWith(".ts") || filePath.endsWith(".d.ts")) {
+    if (!(filePath && filePath.endsWith(".ts")) || filePath.endsWith(".d.ts")) {
       process.exit(0);
     }
 
@@ -61,7 +61,9 @@ function run() {
 
       if (projectErrors.length === 0) {
         // All errors were from node_modules, consider it passing
-        console.log(`[TSC Hook] ✓ TypeScript check passed: ${relativePath} (ignored node_modules errors)`);
+        console.log(
+          `[TSC Hook] ✓ TypeScript check passed: ${relativePath} (ignored node_modules errors)`
+        );
         process.exit(0);
       }
 

@@ -30,10 +30,7 @@ export function devOnly<T>(fn: () => T, fallback?: T): T | undefined {
  * @param message - Error message if assertion fails
  * @throws Error in development if condition is false
  */
-export function devAssert(
-  condition: boolean,
-  message: string,
-): asserts condition {
+export function devAssert(condition: boolean, message: string): asserts condition {
   if (isDev() && !condition) {
     throw new Error(`[Dev Assertion Failed] ${message}`);
   }

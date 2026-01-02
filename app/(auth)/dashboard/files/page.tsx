@@ -14,7 +14,7 @@ export default async function FilesPage() {
     <main className="flex-1 p-4 md:p-6">
       <div className="rounded-3xl border border-dashed bg-background p-6">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Recent Files</h1>
+          <h1 className="font-semibold text-2xl">Recent Files</h1>
         </div>
         <Empty>
           <EmptyHeader>
@@ -22,9 +22,7 @@ export default async function FilesPage() {
               <Clock className="h-6 w-6" />
             </EmptyMedia>
             <EmptyTitle>No recent files</EmptyTitle>
-            <EmptyDescription>
-              Files you've recently opened will appear here
-            </EmptyDescription>
+            <EmptyDescription>Files you've recently opened will appear here</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>

@@ -102,7 +102,7 @@ export async function GET() {
         }
 
         send(JSON.stringify({ type: "ping" }));
-      }, 30000);
+      }, 30_000);
     },
     cancel() {
       cleanup();

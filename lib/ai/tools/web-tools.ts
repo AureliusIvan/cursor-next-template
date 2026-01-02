@@ -17,15 +17,13 @@ export const webSearch = tool({
     action: z
       .enum(["search", "scrape", "extract", "map"])
       .describe(
-        "Action to perform: search (find info), scrape (get page content), extract (structured data), map (discover URLs)",
+        "Action to perform: search (find info), scrape (get page content), extract (structured data), map (discover URLs)"
       ),
     query: z.string().optional().describe("Search query (for search action)"),
     url: z
       .string()
       .optional()
-      .describe(
-        "URL to scrape, extract from, or map (for scrape/extract/map actions)",
-      ),
+      .describe("URL to scrape, extract from, or map (for scrape/extract/map actions)"),
     urls: z
       .array(z.string())
       .optional()
@@ -34,11 +32,7 @@ export const webSearch = tool({
       .string()
       .optional()
       .describe("What to extract from the page(s) (for extract action)"),
-    limit: z
-      .number()
-      .optional()
-      .default(5)
-      .describe("Number of results to return"),
+    limit: z.number().optional().default(5).describe("Number of results to return"),
   }),
   execute: async ({
     action,
@@ -62,10 +56,7 @@ export const webSearch = tool({
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to perform web search operation",
+        error: error instanceof Error ? error.message : "Failed to perform web search operation",
       };
     }
   },

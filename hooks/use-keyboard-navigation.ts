@@ -12,12 +12,10 @@ interface UseKeyboardNavigationReturn {
 export function useKeyboardNavigation(
   hits: Array<Record<string, unknown>>,
   query: string,
-  openResultsInNewTab = true,
+  openResultsInNewTab = true
 ): UseKeyboardNavigationReturn {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [selectionOrigin, setSelectionOrigin] = useState<
-    "keyboard" | "pointer" | "init"
-  >("init");
+  const [selectionOrigin, setSelectionOrigin] = useState<"keyboard" | "pointer" | "init">("init");
 
   const totalItems = useMemo(() => hits.length, [hits.length]);
 
@@ -37,7 +35,7 @@ export function useKeyboardNavigation(
       setSelectedIndex(index);
       setSelectionOrigin("pointer");
     },
-    [totalItems],
+    [totalItems]
   );
 
   const activateSelection = useCallback((): boolean => {

@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const searchQuery = searchParams.get("search")?.trim();
 
     if (!searchQuery) {
-      return NextResponse.json(
-        { error: "Search query is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Search query is required" }, { status: 400 });
     }
 
     const companies = await prisma.company.findMany({
@@ -30,10 +27,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ companies });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to search companies" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to search companies" }, { status: 500 });
   }
 }
 
@@ -63,9 +57,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, company });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to create company" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create company" }, { status: 500 });
   }
 }

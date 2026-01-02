@@ -18,16 +18,12 @@ const statusColors: Record<string, string> = {
 
 const priorityColors: Record<string, string> = {
   LOW: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
-  MEDIUM:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+  MEDIUM: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
   HIGH: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
   URGENT: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
 };
 
-export function ProjectList({
-  initialProjects,
-  searchQuery,
-}: ProjectListProps) {
+export function ProjectList({ initialProjects, searchQuery }: ProjectListProps) {
   const streamProjects = useProjectStream({ initialProjects });
   const [searchProjects, setSearchProjects] = useState<Project[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -43,9 +39,7 @@ export function ProjectList({
     setIsSearching(true);
     const fetchSearchResults = async () => {
       try {
-        const response = await fetch(
-          `/api/crm/projects?search=${encodeURIComponent(searchQuery)}`,
-        );
+        const response = await fetch(`/api/crm/projects?search=${encodeURIComponent(searchQuery)}`);
         const data = await response.json();
         if (response.ok) {
           setSearchProjects(data.projects || []);
@@ -63,8 +57,7 @@ export function ProjectList({
   }, [searchQuery]);
 
   // Use search results when searching, otherwise use stream projects
-  const projects =
-    searchQuery && searchQuery.trim() !== "" ? searchProjects : streamProjects;
+  const projects = searchQuery && searchQuery.trim() !== "" ? searchProjects : streamProjects;
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return "-";
@@ -80,32 +73,30 @@ export function ProjectList({
       ) : projects.length === 0 ? (
         <div className="flex h-96 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed">
           <p className="text-muted-foreground">No projects found.</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {searchQuery && searchQuery.trim() !== ""
               ? "Try a different search term."
               : "Add a project to get started."}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <Link
-              key={project.id}
+              className="cursor-pointer rounded-2xl border bg-card p-5 transition-colors hover:bg-accent"
               href={`/dashboard/projects/${project.id}`}
-              className="rounded-2xl border bg-card p-5 hover:bg-accent transition-colors cursor-pointer"
+              key={project.id}
             >
-              <div className="border-b pb-3 mb-3">
-                <h3 className="text-lg font-semibold truncate">
-                  {project.name}
-                </h3>
-                <div className="flex gap-2 mt-2">
+              <div className="mb-3 border-b pb-3">
+                <h3 className="truncate font-semibold text-lg">{project.name}</h3>
+                <div className="mt-2 flex gap-2">
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${statusColors[project.status] || ""}`}
+                    className={`rounded-full px-2 py-1 text-xs ${statusColors[project.status] || ""}`}
                   >
                     {project.status}
                   </span>
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${priorityColors[project.priority] || ""}`}
+                    className={`rounded-full px-2 py-1 text-xs ${priorityColors[project.priority] || ""}`}
                   >
                     {project.priority}
                   </span>
@@ -113,23 +104,21 @@ export function ProjectList({
               </div>
               <div className="space-y-3 text-sm">
                 {project.description && (
-                  <p className="text-muted-foreground line-clamp-2">
-                    {project.description}
-                  </p>
+                  <p className="line-clamp-2 text-muted-foreground">{project.description}</p>
                 )}
                 <div>
-                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  <div className="mb-1 flex justify-between text-muted-foreground text-xs">
                     <span>Progress</span>
                     <span>{project.progress}%</span>
                   </div>
-                  <div className="w-full bg-muted rounded-full h-2">
+                  <div className="h-2 w-full rounded-full bg-muted">
                     <div
-                      className="bg-primary h-2 rounded-full transition-all"
+                      className="h-2 rounded-full bg-primary transition-all"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
                 </div>
-                <div className="flex justify-between text-xs text-muted-foreground pt-2">
+                <div className="flex justify-between pt-2 text-muted-foreground text-xs">
                   <span>Start: {formatDate(project.startDate)}</span>
                   <span>End: {formatDate(project.endDate)}</span>
                 </div>

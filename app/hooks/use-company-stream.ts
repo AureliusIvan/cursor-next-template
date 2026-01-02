@@ -7,9 +7,7 @@ interface UseCompanyStreamOptions {
   initialCompanies: Company[];
 }
 
-export function useCompanyStream({
-  initialCompanies,
-}: UseCompanyStreamOptions) {
+export function useCompanyStream({ initialCompanies }: UseCompanyStreamOptions) {
   const [companies, setCompanies] = useState<Company[]>(initialCompanies);
   const eventSourceRef = useRef<EventSource | null>(null);
 

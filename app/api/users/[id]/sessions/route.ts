@@ -2,27 +2,25 @@ import { NextResponse } from "next/server";
 import { requireOwner } from "@/lib/auth-helpers";
 import prisma from "@/lib/prisma";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireOwner();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unauthorized";
-    const status = message.includes("Forbidden")
-      ? 403
-      : message.includes("not found")
-        ? 404
-        : 401;
+    let status = 401;
+    if (message.includes("Forbidden")) {
+      status = 403;
+    } else if (message.includes("not found")) {
+      status = 404;
+    }
     return NextResponse.json({ error: message }, { status });
   }
 
   try {
     const { id } = await params;
-    const userId = parseInt(id, 10);
+    const userId = Number.parseInt(id, 10);
 
-    if (isNaN(userId)) {
+    if (Number.isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
 
@@ -52,9 +50,6 @@ export async function GET(
     return NextResponse.json({ sessions });
   } catch (error) {
     console.error("Error fetching sessions:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch sessions" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch sessions" }, { status: 500 });
   }
 }
