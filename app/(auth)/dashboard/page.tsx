@@ -80,10 +80,14 @@ export default function DashboardPage() {
               </div>
             </TabsContent>
             <TabsContent value="projects" className="mt-0">
-              <div className="flex h-96 items-center justify-center rounded-3xl border border-dashed">
-                <p className="text-muted-foreground">
-                  Projects content will go here
-                </p>
+              <div className="flex h-96 flex-col items-center justify-center gap-4 rounded-3xl border border-dashed">
+                <p className="text-muted-foreground">Manage your projects</p>
+                <Button
+                  onClick={() => router.push("/dashboard/projects")}
+                  className="rounded-2xl"
+                >
+                  Go to Projects
+                </Button>
               </div>
             </TabsContent>
             <TabsContent value="learn" className="mt-0">

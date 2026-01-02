@@ -1,5 +1,5 @@
 "use client";
-import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
+import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import React, { useEffect, useRef } from "react";
 
 // Vertex shader
@@ -101,8 +101,6 @@ void main() {
 }
 `;
 
-
-
 interface NovatrixProps {
   colors?: string[];
   distortion?: number;
@@ -111,7 +109,7 @@ interface NovatrixProps {
   scale?: number;
   offsetX?: number;
   offsetY?: number;
-  rotation?: number; 
+  rotation?: number;
   waveAmp?: number;
   waveFreq?: number;
   waveSpeed?: number;
@@ -130,20 +128,20 @@ const hexToRgb = (hex: string): [number, number, number] => {
 export function GradientMesh(props: NovatrixProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const {
-  colors = ["#3b2a8d", "#aaa7d7", "#f75092"],
-  distortion = 5,
-  swirl = 0.5,
-  speed = 1.0,
-  scale = 1,
-  offsetX = 0.0,
-  offsetY = 0.0,
-  rotation = 90,
-  waveAmp = 0.1,
-  waveFreq = 10.0,
-  waveSpeed = 0.2,
-  grain = 0.06,  
-  ...rest
-} = props;
+    colors = ["#3b2a8d", "#aaa7d7", "#f75092"],
+    distortion = 5,
+    swirl = 0.5,
+    speed = 1.0,
+    scale = 1,
+    offsetX = 0.0,
+    offsetY = 0.0,
+    rotation = 90,
+    waveAmp = 0.1,
+    waveFreq = 10.0,
+    waveSpeed = 0.2,
+    grain = 0.06,
+    ...rest
+  } = props;
 
   useEffect(() => {
     if (!ctnDom.current) return;
@@ -177,11 +175,10 @@ export function GradientMesh(props: NovatrixProps) {
         value: new Color(
           gl.canvas.width,
           gl.canvas.height,
-          gl.canvas.width / gl.canvas.height
+          gl.canvas.width / gl.canvas.height,
         ),
       },
       uGrain: { value: grain },
-
     };
 
     const labels = ["A", "B", "C"];
@@ -214,16 +211,29 @@ export function GradientMesh(props: NovatrixProps) {
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
-    colors, distortion, swirl, speed, scale,
-    offsetX, offsetY, rotation, waveAmp, waveFreq, waveSpeed
+    colors,
+    distortion,
+    swirl,
+    speed,
+    scale,
+    offsetX,
+    offsetY,
+    rotation,
+    waveAmp,
+    waveFreq,
+    waveSpeed,
   ]);
 
   return (
     <div
       ref={ctnDom}
-      style={{ width: "100%", height: "100%", position: "absolute", overflow: "hidden"  }}
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        overflow: "hidden",
+      }}
       {...rest}
     />
   );
 }
- 

@@ -18,7 +18,8 @@ const adapter = new PrismaPg(pool);
 const prisma =
   globalForPrisma.prisma &&
   "contact" in globalForPrisma.prisma &&
-  "company" in globalForPrisma.prisma
+  "company" in globalForPrisma.prisma &&
+  "project" in globalForPrisma.prisma
     ? globalForPrisma.prisma
     : new PrismaClient({
         adapter,

@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { FileText, Heart, MessageSquare, Star, Users } from "lucide-react"
+import { motion } from "framer-motion";
+import { FileText, Heart, MessageSquare, Star, Users } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,10 +12,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
-import { apps, communityPosts, projects, recentFiles } from "./data"
+import { apps, communityPosts, projects, recentFiles } from "./data";
 
 export function HomeContent() {
   return (
@@ -258,5 +258,5 @@ export function HomeContent() {
         </div>
       </section>
     </div>
-  )
+  );
 }

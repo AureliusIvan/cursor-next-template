@@ -1,24 +1,12 @@
 {
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Grep",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test aja"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/run-tsc.sh",
-            "timeout": 30
+            "command": "bun .claude/hooks/run-tsc.js"
           }
         ]
       }

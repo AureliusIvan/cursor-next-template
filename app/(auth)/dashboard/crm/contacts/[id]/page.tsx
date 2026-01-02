@@ -1,5 +1,14 @@
+import {
+  ArrowLeft,
+  Briefcase,
+  Building2,
+  Calendar,
+  Clock,
+  ExternalLink,
+  Mail,
+  Phone,
+} from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft, Building2, Briefcase, Calendar, Clock, ExternalLink, Mail, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -12,35 +21,59 @@ interface ContactDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-function ContactField({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string | null | undefined }) {
+function ContactField({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string | null | undefined;
+}) {
   return (
     <div className="flex items-start gap-3">
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
-        <div className="text-sm font-medium break-words">{value || "Not provided"}</div>
+        <div className="text-xs font-medium text-muted-foreground mb-1">
+          {label}
+        </div>
+        <div className="text-sm font-medium break-words">
+          {value || "Not provided"}
+        </div>
       </div>
     </div>
   );
 }
 
-function MetadataField({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string }) {
+function MetadataField({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-start gap-3">
       <div className="mt-0.5 rounded-lg bg-muted p-2">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
+        <div className="text-xs font-medium text-muted-foreground mb-1">
+          {label}
+        </div>
         <div className="text-sm font-medium">{value}</div>
       </div>
     </div>
   );
 }
 
-export default async function ContactDetailPage({ params }: ContactDetailPageProps) {
+export default async function ContactDetailPage({
+  params,
+}: ContactDetailPageProps) {
   const { id } = await params;
   const contactId = parseInt(id, 10);
 
@@ -68,7 +101,9 @@ export default async function ContactDetailPage({ params }: ContactDetailPagePro
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">{contact.name}</h1>
+              <h1 className="text-3xl font-semibold tracking-tight">
+                {contact.name}
+              </h1>
             </div>
           </div>
           <Button variant="outline" className="rounded-xl">
@@ -93,7 +128,11 @@ export default async function ContactDetailPage({ params }: ContactDetailPagePro
             <CardTitle>Work Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ContactField icon={Building2} label="Company" value={contact.company} />
+            <ContactField
+              icon={Building2}
+              label="Company"
+              value={contact.company}
+            />
             <ContactField icon={Briefcase} label="Role" value={contact.role} />
           </CardContent>
         </Card>
@@ -127,8 +166,12 @@ export default async function ContactDetailPage({ params }: ContactDetailPagePro
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium text-muted-foreground mb-1">Notion ID</div>
-                  <div className="text-sm font-medium font-mono break-all">{contact.notionId}</div>
+                  <div className="text-xs font-medium text-muted-foreground mb-1">
+                    Notion ID
+                  </div>
+                  <div className="text-sm font-medium font-mono break-all">
+                    {contact.notionId}
+                  </div>
                 </div>
               </div>
             )}

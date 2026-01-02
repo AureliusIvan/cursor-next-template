@@ -1,23 +1,19 @@
-"use client"
+"use client";
 
-import { Bell, Cloud, MessageSquare } from "lucide-react"
+import { Bell, Cloud, MessageSquare } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 interface AppHeaderProps {
-  notifications?: number
+  notifications?: number;
 }
 
 export function AppHeader({ notifications = 5 }: AppHeaderProps) {
@@ -76,5 +72,5 @@ export function AppHeader({ notifications = 5 }: AppHeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

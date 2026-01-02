@@ -1,26 +1,29 @@
 "use client";
 
+import type { Contact } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { useState } from "react";
-
 import { ContactForm } from "@/components/crm/contact-form";
 import { ContactList } from "@/components/crm/contact-list";
 import Search from "@/components/search";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Contact } from "@prisma/client";
 
 interface ContactsPageClientProps {
   initialContacts: Contact[];
   lastSyncedAt?: Date | null;
 }
 
-export function ContactsPageClient({ initialContacts, lastSyncedAt }: ContactsPageClientProps) {
+export function ContactsPageClient({
+  initialContacts,
+  lastSyncedAt,
+}: ContactsPageClientProps) {
   const [activeTab, setActiveTab] = useState("contacts");
   const applicationId = process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID;
   const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY;
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_CONTACTS_INDEX || "contacts";
+  const indexName =
+    process.env.NEXT_PUBLIC_ALGOLIA_CONTACTS_INDEX || "contacts";
 
   const hasAlgoliaConfig = applicationId && apiKey;
 
@@ -87,7 +90,9 @@ export function ContactsPageClient({ initialContacts, lastSyncedAt }: ContactsPa
               ) : (
                 <div className="mb-6 rounded-2xl border border-dashed bg-muted/50 p-4">
                   <p className="text-sm text-muted-foreground">
-                    Algolia search is not configured. Please set NEXT_PUBLIC_ALGOLIA_APPLICATION_ID and NEXT_PUBLIC_ALGOLIA_API_KEY environment variables.
+                    Algolia search is not configured. Please set
+                    NEXT_PUBLIC_ALGOLIA_APPLICATION_ID and
+                    NEXT_PUBLIC_ALGOLIA_API_KEY environment variables.
                   </p>
                 </div>
               )}
