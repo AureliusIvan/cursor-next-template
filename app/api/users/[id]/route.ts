@@ -181,7 +181,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     const { id } = await params;
     const userId = Number.parseInt(id, 10);
 
-    if (isNaN(userId)) {
+    if (Number.isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
 
