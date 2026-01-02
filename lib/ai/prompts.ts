@@ -63,6 +63,28 @@ You are operating in Agentic mode with access to powerful tools. In this mode, y
 Remember: You have powerful tools at your disposal. Use them to provide accurate, comprehensive, and helpful responses.`;
 
 /**
+ * Contact extraction prompt for multimodal AI
+ */
+export const CONTACT_EXTRACTION_PROMPT = `You are a contact information extraction assistant. Analyze the provided image and extract contact information.
+
+Extract the following fields from the image:
+- name: Full name of the contact (required if present)
+- email: Email address (if present)
+- phone: Phone number (if present)
+- company: Company name (if present)
+- role: Job title or role (if present)
+
+Guidelines:
+- Extract only information that is clearly visible in the image
+- If a field is not present or unclear, return null for that field
+- Normalize phone numbers to a standard format (e.g., +1-555-123-4567)
+- Clean email addresses (remove spaces, ensure proper format)
+- If multiple contacts are present, extract the primary/most prominent one
+- Return all extracted data as a JSON object with the exact field names: name, email, phone, company, role
+
+Return only valid JSON, no additional text or explanation.`;
+
+/**
  * Get the appropriate system prompt based on chat mode
  */
 export function getSystemPrompt(mode: "fast" | "agentic" = "fast"): string {

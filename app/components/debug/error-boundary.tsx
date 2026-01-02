@@ -1,7 +1,7 @@
 "use client";
 
 import { Component, type ReactNode } from "react";
-import { debug, debugError } from "@/lib/debug";
+import { debug, debugError, logErrorPersistently } from "@/lib/debug";
 import { isDev } from "@/lib/dev-utils";
 
 interface ErrorBoundaryProps {
@@ -48,6 +48,18 @@ export class ErrorBoundary extends Component<
       error,
       errorInfo,
     );
+
+    // Log error persistently
+    logErrorPersistently({
+      type: "error_boundary",
+      message: error.message,
+      stack: error.stack,
+      component: "ErrorBoundary",
+      errorInfo: {
+        componentStack: errorInfo.componentStack,
+      },
+      timestamp: new Date().toISOString(),
+    });
 
     if (this.props.onError) {
       this.props.onError(error, errorInfo);

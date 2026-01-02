@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { GlobalErrorHandler } from "./components/debug/global-error-handler";
 import { InstallPrompt } from "./components/pwa/install-prompt";
 
 const geistSans = Geist({
@@ -52,6 +53,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GlobalErrorHandler />
         {children}
         <InstallPrompt />
         <Toaster />

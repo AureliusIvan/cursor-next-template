@@ -257,6 +257,11 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    title: "Users",
+    icon: <Users className="h-4 w-4" />,
+    url: "/dashboard/users",
+  },
+  {
     title: "AI",
     icon: <Sparkles className="h-4 w-4" />,
     url: "/dashboard/ai",

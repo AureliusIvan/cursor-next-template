@@ -17,7 +17,13 @@ const router: Router = {
       fileTypes: ["image/*", "application/pdf", "text/*"],
       multipleFiles: true,
       maxFiles: 5,
-      maxFileSize: "10MB",
+      maxFileSize: 10 * 1024 * 1024,
+    }),
+    // For contact extraction (single image upload)
+    contactExtraction: route({
+      fileTypes: ["image/*"],
+      multipleFiles: false,
+      maxFileSize: 10 * 1024 * 1024,
     }),
   },
 };

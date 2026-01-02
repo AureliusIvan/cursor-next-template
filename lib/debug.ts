@@ -142,3 +142,27 @@ export function debugTable(data: unknown, context?: DebugContext): void {
   console.log(prefix);
   console.table(data);
 }
+
+/**
+ * Log error persistently to file via API endpoint
+ * Only works in development mode
+ * Silently handles failures to avoid breaking error handling flow
+ * @param errorData - Error data object to log
+ */
+export async function logErrorPersistently(
+  errorData: Record<string, unknown>,
+): Promise<void> {
+  if (!isDev()) return;
+  if (typeof window === "undefined") return; // Only works client-side
+
+  try {
+    await fetch("/api/debug/log-error", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(errorData),
+    });
+  } catch (error) {
+    // Silently fail - don't break error handling if logging fails
+    // Errors are already logged to console via debugError()
+  }
+}
