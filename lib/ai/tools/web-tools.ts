@@ -34,7 +34,7 @@ export const webSearch = tool({
       .describe("What to extract from the page(s) (for extract action)"),
     limit: z.number().optional().default(5).describe("Number of results to return"),
   }),
-  execute: async ({
+  execute: ({
     action,
     query,
     url,

@@ -5,9 +5,17 @@
 
 /**
  * Check if the code is running in development mode
+ * Works on both server and client side
  * @returns true if in development, false otherwise
  */
 export function isDev(): boolean {
+  // On client side, Next.js replaces process.env.NODE_ENV at build time
+  // On server side, it uses the actual environment variable
+  if (typeof window !== "undefined") {
+    // Client side: Next.js replaces this at build time
+    return process.env.NODE_ENV === "development";
+  }
+  // Server side
   return process.env.NODE_ENV === "development";
 }
 

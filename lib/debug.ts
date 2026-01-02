@@ -5,11 +5,11 @@
 
 import { isDev } from "./dev-utils";
 
-type DebugContext = {
+export interface DebugContext {
   component?: string;
   function?: string;
   [key: string]: unknown;
-};
+}
 
 /**
  * Debug logger that only works in development
@@ -18,7 +18,9 @@ type DebugContext = {
  * @param ...args - Additional data to log
  */
 export function debug(context: DebugContext | string, message?: string, ...args: unknown[]): void {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return;
+  }
 
   if (typeof context === "string") {
     console.log(`[Debug] ${context}`, message, ...args);
@@ -51,7 +53,9 @@ export function debugError(
   error: Error | string,
   ...args: unknown[]
 ): void {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return;
+  }
 
   if (typeof context === "string") {
     console.error(`[Debug Error] ${context}`, error, ...args);
@@ -100,7 +104,9 @@ export function debugGroup(label: string, fn: () => void): void {
  * @param context - Optional context information
  */
 export function debugTime(label: string, context?: DebugContext): void {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return;
+  }
 
   const contextStr = context
     ? ` ${[context.component, context.function].filter(Boolean).join("::")}`
@@ -114,7 +120,9 @@ export function debugTime(label: string, context?: DebugContext): void {
  * @param context - Optional context information
  */
 export function debugTimeEnd(label: string, context?: DebugContext): void {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return;
+  }
 
   const contextStr = context
     ? ` ${[context.component, context.function].filter(Boolean).join("::")}`
@@ -128,7 +136,9 @@ export function debugTimeEnd(label: string, context?: DebugContext): void {
  * @param context - Optional context information
  */
 export function debugTable(data: unknown, context?: DebugContext): void {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return;
+  }
 
   const prefix = context
     ? `[Debug Table] ${[context.component, context.function].filter(Boolean).join("::")}`
@@ -144,8 +154,12 @@ export function debugTable(data: unknown, context?: DebugContext): void {
  * @param errorData - Error data object to log
  */
 export async function logErrorPersistently(errorData: Record<string, unknown>): Promise<void> {
-  if (!isDev()) return;
-  if (typeof window === "undefined") return; // Only works client-side
+  if (!isDev()) {
+    return;
+  }
+  if (typeof window === "undefined") {
+    return;
+  }
 
   try {
     await fetch("/api/debug/log-error", {
@@ -153,7 +167,7 @@ export async function logErrorPersistently(errorData: Record<string, unknown>): 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(errorData),
     });
-  } catch (error) {
+  } catch {
     // Silently fail - don't break error handling if logging fails
     // Errors are already logged to console via debugError()
   }

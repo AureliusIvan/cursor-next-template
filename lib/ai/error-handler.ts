@@ -5,12 +5,39 @@
 import { debugError } from "@/lib/debug";
 import type { ErrorInfo } from "./types";
 
+interface ErrorLike {
+  status?: number;
+  statusCode?: number;
+  retryAfter?: number | string;
+  retry_after?: number | string;
+  headers?: Record<string, string | number | undefined>;
+}
+
+function isErrorLike(error: unknown): error is ErrorLike {
+  return typeof error === "object" && error !== null;
+}
+
+function getErrorProperty<T>(error: unknown, ...keys: string[]): T | undefined {
+  if (!isErrorLike(error)) {
+    return undefined;
+  }
+  for (const key of keys) {
+    const value = (error as Record<string, unknown>)[key];
+    if (value !== undefined) {
+      return value as T;
+    }
+  }
+  return undefined;
+}
+
 /**
  * Detect and classify error types from various AI provider errors
  */
 export function detectErrorType(error: unknown): ErrorInfo {
   const errorMessage =
     error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+  const status = getErrorProperty<number>(error, "status", "statusCode");
 
   // Check for rate limit errors
   if (
@@ -19,14 +46,12 @@ export function detectErrorType(error: unknown): ErrorInfo {
     errorMessage.includes("too many requests") ||
     errorMessage.includes("quota exceeded") ||
     errorMessage.includes("429") ||
-    (error as any)?.status === 429 ||
-    (error as any)?.statusCode === 429
+    status === 429
   ) {
     // Try to extract retry-after from error or default to 60 seconds
     const retryAfter =
-      (error as any)?.retryAfter ||
-      (error as any)?.retry_after ||
-      (error as any)?.headers?.["retry-after"] ||
+      getErrorProperty<number | string>(error, "retryAfter", "retry_after") ||
+      (isErrorLike(error) && error.headers?.["retry-after"]) ||
       60;
 
     return {
@@ -34,7 +59,7 @@ export function detectErrorType(error: unknown): ErrorInfo {
       status: 429,
       message: "Rate limit exceeded. Please try again later.",
       retryAfter:
-        typeof retryAfter === "number" ? retryAfter : Number.parseInt(retryAfter, 10) || 60,
+        typeof retryAfter === "number" ? retryAfter : Number.parseInt(String(retryAfter), 10) || 60,
     };
   }
 
@@ -48,8 +73,7 @@ export function detectErrorType(error: unknown): ErrorInfo {
     errorMessage.includes("api key") ||
     errorMessage.includes("apikey") ||
     errorMessage.includes("401") ||
-    (error as any)?.status === 401 ||
-    (error as any)?.statusCode === 401
+    status === 401
   ) {
     return {
       code: "UNAUTHORIZED",
@@ -59,7 +83,6 @@ export function detectErrorType(error: unknown): ErrorInfo {
   }
 
   // Check for other API errors (400, 403, 404, 500, etc.)
-  const status = (error as any)?.status || (error as any)?.statusCode;
   if (status && typeof status === "number" && status >= 400 && status < 500) {
     return {
       code: "API_ERROR",
@@ -81,7 +104,7 @@ export function detectErrorType(error: unknown): ErrorInfo {
  */
 export function buildErrorResponse(error: unknown): Response {
   // Log the error for debugging
-  debugError({ module: "ChatAPI" }, error);
+  debugError({ module: "ChatAPI" }, error instanceof Error ? error : String(error));
 
   // Detect error type
   const errorInfo = detectErrorType(error);

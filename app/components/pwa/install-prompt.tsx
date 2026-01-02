@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { debug } from "@/lib/debug";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -28,7 +29,9 @@ export function InstallPrompt() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      return;
+    }
 
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -60,8 +63,15 @@ export function InstallPrompt() {
           aria-label="Dismiss"
           className="ml-4 text-gray-400 hover:text-gray-600"
           onClick={handleDismiss}
+          type="button"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            aria-hidden="true"
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               d="M6 18L18 6M6 6l12 12"
               strokeLinecap="round"
@@ -75,12 +85,14 @@ export function InstallPrompt() {
         <button
           className="flex-1 rounded-md bg-black px-4 py-2 font-medium text-sm text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
           onClick={handleInstall}
+          type="button"
         >
           Install
         </button>
         <button
           className="rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
           onClick={handleDismiss}
+          type="button"
         >
           Not Now
         </button>

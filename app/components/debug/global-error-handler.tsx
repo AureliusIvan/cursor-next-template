@@ -11,7 +11,9 @@ import { isDev } from "@/lib/dev-utils";
  */
 export function GlobalErrorHandler() {
   useEffect(() => {
-    if (!isDev()) return;
+    if (!isDev()) {
+      return;
+    }
 
     // Handle synchronous errors
     const handleError = (event: ErrorEvent) => {
@@ -42,7 +44,9 @@ export function GlobalErrorHandler() {
       console.error("[CLIENT ERROR]", error);
 
       // Persist to file
-      logErrorPersistently(error);
+      logErrorPersistently(error).catch((err) => {
+        console.error("[GlobalErrorHandler] Failed to persist error:", err);
+      });
     };
 
     // Handle unhandled promise rejections
@@ -71,7 +75,9 @@ export function GlobalErrorHandler() {
       console.error("[CLIENT ERROR]", errorData);
 
       // Persist to file
-      logErrorPersistently(errorData);
+      logErrorPersistently(errorData).catch((err) => {
+        console.error("[GlobalErrorHandler] Failed to persist error:", err);
+      });
     };
 
     window.addEventListener("error", handleError);

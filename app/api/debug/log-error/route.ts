@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
-import { join } from "path";
 import { isDev } from "@/lib/dev-utils";
 
 /**
