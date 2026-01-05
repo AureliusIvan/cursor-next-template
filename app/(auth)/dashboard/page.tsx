@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Download, Plus } from "lucide-react";
+import { Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { ProjectForm } from "@/components/crm/project-form";
 import { HomeContent } from "@/components/home-content";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,10 +43,7 @@ export default function DashboardPage() {
               <Download className="mr-2 h-4 w-4" />
               Install App
             </Button>
-            <Button className="rounded-2xl">
-              <Plus className="mr-2 h-4 w-4" />
-              New Project
-            </Button>
+            <ProjectForm />
           </div>
         </div>
 

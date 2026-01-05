@@ -106,25 +106,243 @@ import { ErrorBoundary } from "@/app/components/debug/error-boundary";
 - Update USER-CHOICE.md if user setup new configurations (create one if NOT EXIST; refer to USER-CHOICE-TEMPLATE.md)
 - for AI development, view the logs on .devtools/generations.json
 
+## Beads Issue Tracking Integration
+
+Beads (`bd`) is a git-backed issue tracker designed for AI-assisted development workflows. Issues are stored in `.beads/issues.jsonl` and synced via git.
+
+### Session Start Workflow (MANDATORY)
+
+**Always start by syncing and reading issues:**
+
+1. **Sync issues from remote:**
+   ```bash
+   bd sync --pull
+   ```
+
+2. **Read `.beads/issues.jsonl` directly** to understand:
+   - Current open issues and their status
+   - Dependencies between issues
+   - Priorities and labels
+   - Issue descriptions
+
+3. **Identify work to do:**
+   - Find issues with status `ready` or `open`
+   - Check dependencies - only work on issues whose dependencies are `closed`
+   - Prioritize by `priority` field (`critical` > `high` > `normal` > `low`)
+
+4. **Start working on an issue:**
+   ```bash
+   bd update <issue-id> --status in_progress
+   ```
+
+**Helper commands:**
+```bash
+# Quick status check
+.cursor/hooks/beads-status.sh
+
+# Interactive work starter
+.cursor/hooks/beads-start-work.sh
+
+# Get context for AI
+.cursor/hooks/beads-context.sh
+```
+
+### During Work Patterns
+
+**When working on an issue:**
+
+- **Read issue details:** `bd show <issue-id>`
+- **Check dependencies:** Ensure all dependencies are `closed` before starting
+- **Update progress:** Add notes with `bd update <issue-id> --notes "progress update"`
+
+**When creating sub-tasks:**
+
+- **Create new issue:** `bd create "Sub-task: Description" "Details"`
+- **Set dependencies:** `bd depends <parent-issue-id> <sub-task-id>`
+- **Add labels:** `bd label <issue-id> frontend|backend|bug|feature`
+- **Set priority:** `bd priority <issue-id> low|normal|high|critical`
+
+**When breaking down large tasks:**
+
+1. Create parent issue with overall goal
+2. Create sub-issues for specific implementation details
+3. Set dependencies: `bd depends <parent-id> <sub-id>`
+4. Work on sub-issues first, then parent
+
+### Issue Creation Best Practices
+
+**Create granular, actionable issues:**
+
+```bash
+bd create "Type: Brief description" "**Problem:**
+[Describe the problem]
+
+**Location:**
+- File: \`path/to/file.ts\`
+- Lines: X-Y
+
+**Root Cause:**
+[Why does this exist?]
+
+**Proposed Solution:**
+[How to fix/implement]
+
+**Files to modify:**
+- \`file1.ts\`
+- \`file2.tsx\`"
+```
+
+**Add metadata:**
+
+```bash
+# Add labels
+bd label <issue-id> bug|feature|frontend|backend|api|ui
+
+# Set priority
+bd priority <issue-id> low|normal|high|critical
+
+# Set dependencies
+bd depends <issue-id> <dependency-id>
+```
+
+**Label conventions:**
+- `bug` - Bug fixes
+- `feature` - New features
+- `frontend` - Frontend work
+- `backend` - Backend work
+- `api` - API changes
+- `ui` - UI/UX changes
+- `refactor` - Code refactoring
+- `docs` - Documentation
+
+**Priority levels:**
+- `low` - Nice to have, not urgent
+- `normal` - Standard priority (default)
+- `high` - Important, should be done soon
+- `critical` - Urgent, blocking issue
+
+### Session End Workflow (MANDATORY)
+
+**Before ending work:**
+
+1. **Update issue status:**
+   ```bash
+   # For completed work
+   bd update <issue-id> --status done
+   bd close <issue-id>
+   
+   # For work in progress
+   bd update <issue-id> --notes "Progress: what was done, what remains"
+   ```
+
+2. **Create issues for remaining work:**
+   ```bash
+   bd create "Task: Description" "Details"
+   bd label <issue-id> <labels>
+   bd priority <issue-id> <priority>
+   ```
+
+3. **Sync issues:**
+   ```bash
+   bd sync
+   ```
+
+4. **Git workflow:**
+   ```bash
+   git pull --rebase
+   bd sync  # Ensure beads are synced
+   git add .beads/issues.jsonl  # Explicitly stage beads changes
+   git commit -m "feat: [issue-id] description"
+   git push
+   ```
+
+### Beads Commands Reference
+
+**Essential commands:**
+
+```bash
+# Create issue
+bd create "Title" "Description"
+
+# List issues
+bd list --open
+bd list --status in_progress
+bd list --status ready
+
+# Show issue details
+bd show <issue-id>
+
+# Update status
+bd update <issue-id> --status in_progress|done|ready
+bd close <issue-id>
+
+# Add metadata
+bd label <issue-id> <label1> <label2>
+bd priority <issue-id> <priority>
+bd depends <issue-id> <dependency-id>
+
+# Sync
+bd sync
+bd sync --pull
+bd sync --push
+```
+
+**See also:**
+- `.cursor/commands/start-work.md` - Session start workflow
+- `.cursor/commands/end-work.md` - Session end workflow
+- `.cursor/commands/beads-create-issue.md` - Issue creation guide
+- `.cursor/commands/use-beads.md` - Complete beads reference
+
+### Key Integration Points
+
+1. **Manual Sync Required** - Cursor hooks don't support session events, so agent must run `bd sync` manually at session start/end
+2. **Read JSONL Directly** - Agent should parse `.beads/issues.jsonl` to understand current state
+3. **Respect Dependencies** - Only work on issues whose dependencies are `closed`
+4. **Update Status During Work** - Use `bd update --status in_progress` when starting
+5. **Close When Done** - Always `bd close <issue-id>` after completing work
+6. **Sync Before Git Push** - Always `bd sync` before `git push`
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
 
 **MANDATORY WORKFLOW:**
 
-1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
+1. **Update beads issues:**
+   ```bash
+   # Close completed issues
+   bd close <issue-id>
+   
+   # Update in-progress issues
+   bd update <issue-id> --notes "Progress update"
+   
+   # Create issues for remaining work
+   bd create "Task: Description" "Details"
+   ```
+
+2. **Sync beads issues:**
+   ```bash
+   bd sync
+   ```
+
+3. **File issues for remaining work** - Create issues for anything that needs follow-up (if not done in step 1)
+4. **Run quality gates** (if code changed) - Tests, linters, builds
+5. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
-   bd sync
+   bd sync  # Ensure beads are synced
+   git add .beads/issues.jsonl  # Explicitly stage beads changes
+   git commit -m "feat: [issue-id] description"
    git push
    git status  # MUST show "up to date with origin"
    ```
-5. **Clean up** - Clear stashes, prune remote branches
-6. **Verify** - All changes committed AND pushed
-7. **Hand off** - Provide context for next session
+6. **Clean up** - Clear stashes, prune remote branches
+7. **Verify** - All changes committed AND pushed:
+   ```bash
+   git status
+   bd list --open  # Verify issue status
+   ```
+8. **Hand off** - Provide context for next session, including open issues
 
 **CRITICAL RULES:**
 - Work is NOT complete until `git push` succeeds
