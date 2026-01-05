@@ -28,11 +28,11 @@ export function ProjectDeleteDialog({ projectId, projectName }: ProjectDeleteDia
       if (data.success) {
         router.push("/dashboard/projects");
       } else {
-        alert(data.error || "Failed to delete project");
+        toast.error(data.error || "Failed to delete project");
         setIsOpen(false);
       }
     } catch (_error) {
-      alert("An error occurred while deleting the project");
+      toast.error("An error occurred while deleting the project");
       setIsOpen(false);
     } finally {
       setIsDeleting(false);

@@ -88,10 +88,10 @@ export function ContactForm() {
         handleClose();
         // Contact list will update automatically via SSE
       } else {
-        alert(data.error || "Failed to create contact");
+        toast.error(data.error || "Failed to create contact");
       }
     } catch (_error) {
-      alert("An error occurred while creating the contact");
+      toast.error("An error occurred while creating the contact");
     } finally {
       setIsSubmitting(false);
     }

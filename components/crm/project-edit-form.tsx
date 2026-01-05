@@ -53,10 +53,10 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
         setIsOpen(false);
         onSuccess?.();
       } else {
-        alert(data.error || "Failed to update project");
+        toast.error(data.error || "Failed to update project");
       }
     } catch (_error) {
-      alert("An error occurred while updating the project");
+      toast.error("An error occurred while updating the project");
     } finally {
       setIsSubmitting(false);
     }
