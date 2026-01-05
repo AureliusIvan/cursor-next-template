@@ -2,6 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,10 +56,10 @@ export function ProjectForm() {
           endDate: "",
         });
       } else {
-        alert(data.error || "Failed to create project");
+        toast.error(data.error || "Failed to create project");
       }
     } catch (_error) {
-      alert("An error occurred while creating the project");
+      toast.error("An error occurred while creating the project");
     } finally {
       setIsSubmitting(false);
     }
