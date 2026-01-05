@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { auth } from "./auth";
 import prisma from "./prisma";
 
-export async function requireOwner() {
+export async function requireAuth() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -11,7 +11,7 @@ export async function requireOwner() {
     throw new Error("Unauthorized");
   }
 
-  // Get full user with role from database
+  // Get full user from database
   const userId = Number.parseInt(String(session.user.id), 10);
   if (isNaN(userId)) {
     throw new Error("Invalid user ID");
@@ -25,6 +25,12 @@ export async function requireOwner() {
   if (!user) {
     throw new Error("User not found");
   }
+
+  return { session, user };
+}
+
+export async function requireOwner() {
+  const { session, user } = await requireAuth();
 
   if (user.role !== "OWNER") {
     throw new Error("Forbidden: Only OWNER role can access this resource");

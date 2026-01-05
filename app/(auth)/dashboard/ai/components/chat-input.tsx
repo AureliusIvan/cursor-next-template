@@ -72,14 +72,16 @@ export function ChatInput({
       className={cn(
         "z-50 shrink-0 transition-all",
         hasMessages
-          ? cn(
-              "fixed bottom-4",
-              isMobile
-                ? "right-4 left-4"
-                : sidebarState === "collapsed"
-                  ? "right-6 left-[calc(var(--sidebar-width-icon)+1rem)]"
-                  : "right-6 left-[calc(var(--sidebar-width)+1rem)]"
-            )
+          ? (() => {
+              const baseClasses = "fixed bottom-4";
+              if (isMobile) {
+                return cn(baseClasses, "right-4 left-4");
+              }
+              if (sidebarState === "collapsed") {
+                return cn(baseClasses, "right-6 left-[calc(var(--sidebar-width-icon)+1rem)]");
+              }
+              return cn(baseClasses, "right-6 left-[calc(var(--sidebar-width)+1rem)]");
+            })()
           : "relative mt-4"
       )}
       initial={{ opacity: 0, y: 10 }}

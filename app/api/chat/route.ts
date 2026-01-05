@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       messages: unknown;
       mode?: ChatMode;
       enabledTools?: string[];
+      sessionId?: number;
     };
 
     // Validate messages
