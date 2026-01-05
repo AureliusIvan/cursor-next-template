@@ -2,6 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,10 +47,10 @@ export function CompanyForm() {
         });
         // Company list will update automatically via SSE
       } else {
-        alert(data.error || "Failed to create company");
+        toast.error(data.error || "Failed to create company");
       }
     } catch (_error) {
-      alert("An error occurred while creating the company");
+      toast.error("An error occurred while creating the company");
     } finally {
       setIsSubmitting(false);
     }
