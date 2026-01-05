@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { GradientMesh } from "@/components/gradient-mesh";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ export function HeroSection01() {
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <img
+          <Image
             alt="Logo"
             className="h-12 w-12 object-contain md:h-16 md:w-16"
             height={60}
