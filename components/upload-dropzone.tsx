@@ -4,7 +4,7 @@ import { useId } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn } from "@/lib/utils";
 
-type UploadDropzoneProps = {
+interface UploadDropzoneProps {
   control: UploadHookControl<true>;
   id?: string;
   accept?: string;
@@ -19,7 +19,7 @@ type UploadDropzoneProps = {
   uploadOverride?: (...args: Parameters<UploadHookControl<true>["upload"]>) => void;
 
   // Add any additional props you need.
-};
+}
 
 export function UploadDropzone({
   control: { upload, isPending },
