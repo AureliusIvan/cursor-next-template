@@ -9,7 +9,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function FilesPage() {
+export default function FilesPage() {
   return (
     <main className="flex-1 p-4 md:p-6">
       <div className="rounded-3xl border border-dashed bg-background p-6">

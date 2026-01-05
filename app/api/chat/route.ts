@@ -4,9 +4,9 @@
  */
 
 import { devToolsMiddleware } from "@ai-sdk/devtools";
-import { google } from "@ai-sdk/google";
 import { convertToModelMessages, stepCountIs, streamText, wrapLanguageModel } from "ai";
 import { buildErrorResponse } from "@/lib/ai/error-handler";
+import { getModel } from "@/lib/ai/models";
 import { getSystemPrompt } from "@/lib/ai/prompts";
 import { getFilteredTools } from "@/lib/ai/tools";
 import type { ChatMode } from "@/lib/ai/types";
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
     // Get model with devtools middleware
     const model = wrapLanguageModel({
-      model: google("gemini-3-flash-preview"),
+      model: getModel(),
       middleware: devToolsMiddleware(),
     });
 

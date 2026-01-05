@@ -11,6 +11,7 @@ import {
   ImageIcon,
   Layers,
   LayoutGrid,
+  Plug,
   Sparkles,
   Users,
   Video,
@@ -257,5 +258,10 @@ export const sidebarItems: SidebarItem[] = [
     title: "AI",
     icon: <Sparkles className="h-4 w-4" />,
     url: "/dashboard/ai",
+  },
+  {
+    title: "Integrations",
+    icon: <Plug className="h-4 w-4" />,
+    url: "/dashboard/integrations",
   },
 ];

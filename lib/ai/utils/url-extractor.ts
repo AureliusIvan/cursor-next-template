@@ -2,6 +2,8 @@
  * URL extraction and validation utilities
  */
 
+const TRAILING_SLASH_REGEX = /\/$/;
+
 /**
  * Extract URLs from text using regex
  * Supports: https://, http://, www., and domain patterns
@@ -39,7 +41,7 @@ export function normalizeUrl(url: string): string {
   try {
     const parsed = new URL(url);
     // Remove trailing slash and hash
-    return parsed.origin + parsed.pathname.replace(/\/$/, "") + parsed.search;
+    return parsed.origin + parsed.pathname.replace(TRAILING_SLASH_REGEX, "") + parsed.search;
   } catch {
     return url;
   }

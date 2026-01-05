@@ -9,7 +9,7 @@ import { debug, debugError } from "@/lib/debug";
  * Simple in-memory cache with TTL
  */
 class ContentCache {
-  private cache = new Map<string, { content: string; timestamp: number }>();
+  private readonly cache = new Map<string, { content: string; timestamp: number }>();
   private readonly ttl: number;
 
   constructor(ttlMinutes = 10) {
@@ -83,7 +83,9 @@ export async function fetchWebContent(url: string): Promise<string | null> {
 
     return null;
   } catch (error) {
-    debugError({ module: "ContentFetcher" }, error, { url });
+    debugError({ module: "ContentFetcher" }, error instanceof Error ? error : String(error), {
+      url,
+    });
     return null;
   }
 }

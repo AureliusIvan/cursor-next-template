@@ -4,8 +4,8 @@
 
 import { anthropic } from "@ai-sdk/anthropic";
 import { google } from "@ai-sdk/google";
-import { openai } from "@ai-sdk/openai";
-import type { LanguageModel } from "ai";
+import { createOpenAI, openai } from "@ai-sdk/openai";
+import type { LanguageModelV3 } from "@ai-sdk/provider";
 import type { AIProvider } from "./types";
 
 /**
@@ -20,7 +20,7 @@ export function getProviderFromEnv(): AIProvider {
  * Get the AI model instance based on provider configuration
  * Throws error if required API key is not set
  */
-export function getModel(): LanguageModel {
+export function getModel(): LanguageModelV3 {
   const provider = getProviderFromEnv();
 
   switch (provider) {
@@ -39,6 +39,21 @@ export function getModel(): LanguageModel {
         throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is not set");
       }
       return google("gemini-3-flash-preview");
+    }
+
+    case "kimi": {
+      const apiKey = process.env.KIMI_API_KEY;
+      const baseURL = process.env.KIMI_BASE_URL || "https://ark.ap-southeast.bytepluses.com/api/v3";
+      const model = process.env.KIMI_MODEL || "kimi-k2-thinking-251104";
+      if (!apiKey) {
+        throw new Error("KIMI_API_KEY is not set");
+      }
+      const kimiOpenAI = createOpenAI({
+        apiKey,
+        baseURL,
+      });
+      // Explicitly use chat() to force chat/completions endpoint instead of responses
+      return kimiOpenAI.chat(model);
     }
 
     default: {

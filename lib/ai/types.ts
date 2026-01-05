@@ -12,7 +12,7 @@ export type ChatMode = "fast" | "agentic";
 /**
  * Supported AI providers
  */
-export type AIProvider = "openai" | "anthropic" | "google" | "gemini";
+export type AIProvider = "openai" | "anthropic" | "google" | "gemini" | "kimi";
 
 /**
  * Error classification codes

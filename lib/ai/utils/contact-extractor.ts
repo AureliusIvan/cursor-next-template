@@ -3,20 +3,24 @@
  */
 
 import { google } from "@ai-sdk/google";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import { z } from "zod";
 import { CONTACT_EXTRACTION_PROMPT } from "../prompts";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Contact data schema for extraction
  */
 const contactSchema = z.object({
   name: z.string().nullable(),
-  email: z.union([z.string().email(), z.string(), z.null()]).transform((val) => {
-    if (!val || typeof val !== "string") return null;
+  email: z.union([z.string(), z.null()]).transform((val) => {
+    if (!val || typeof val !== "string") {
+      return null;
+    }
     const trimmed = val.trim();
     // Basic email validation
-    if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+    if (trimmed && EMAIL_REGEX.test(trimmed)) {
       return trimmed;
     }
     return null;
@@ -35,14 +39,17 @@ export async function extractContactFromImage(imageUrl: string): Promise<Extract
   const model = google("gemini-3-flash-preview");
 
   try {
-    const result = await generateObject({
+    const result = await generateText({
       model,
-      schema: contactSchema,
-      prompt: CONTACT_EXTRACTION_PROMPT,
+      output: Output.object({ schema: contactSchema }),
       messages: [
         {
           role: "user",
           content: [
+            {
+              type: "text",
+              text: CONTACT_EXTRACTION_PROMPT,
+            },
             {
               type: "image",
               image: imageUrl,
@@ -53,7 +60,7 @@ export async function extractContactFromImage(imageUrl: string): Promise<Extract
     });
 
     // Validate and clean the extracted data
-    const extracted = contactSchema.parse(result.object);
+    const extracted = contactSchema.parse(result.output);
 
     // Clean up the data
     return {
