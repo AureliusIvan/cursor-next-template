@@ -70,6 +70,62 @@ bd init
 bd create "Try out Beads"
 ```
 
+## Cursor Integration
+
+This repository has integrated Beads with Cursor AI workflows for seamless issue tracking.
+
+### Quick Start Commands
+
+Use these Cursor commands for common workflows:
+
+- `/use-start-work` - Begin work session with beads sync
+- `/use-end-work` - Complete session with sync and push
+- `/use-beads-create-issue` - Create well-formatted issues
+- `/use-beads` - Complete beads reference
+
+### Helper Scripts
+
+Run these scripts from the project root:
+
+```bash
+# Interactive work session starter
+.cursor/hooks/beads-start-work.sh
+
+# Show current issue status
+.cursor/hooks/beads-status.sh
+
+# Get context for AI agent
+.cursor/hooks/beads-context.sh
+
+# Sync issues with remote
+.cursor/hooks/beads-sync.sh
+```
+
+### Workflow Integration
+
+**Session Start:**
+1. Run `bd sync --pull` to get latest issues
+2. Read `.beads/issues.jsonl` to understand current state
+3. Select issue to work on (check dependencies first)
+4. Mark as in progress: `bd update <issue-id> --status in_progress`
+
+**During Work:**
+- Create sub-issues when breaking down tasks
+- Update progress with notes: `bd update <issue-id> --notes "update"`
+- Check dependencies before starting: `bd show <issue-id>`
+
+**Session End:**
+1. Close completed issues: `bd close <issue-id>`
+2. Create issues for remaining work
+3. Sync: `bd sync`
+4. Git workflow: `git pull --rebase && bd sync && git add .beads/issues.jsonl && git commit && git push`
+
+### Documentation
+
+- **Agent Workflow**: See `AGENTS.md` for comprehensive beads integration
+- **Issue Template**: See `.cursor/templates/issue-template.md` for issue creation guide
+- **Commands**: See `.cursor/commands/` for detailed workflow documentation
+
 ## Learn More
 
 - **Documentation**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
